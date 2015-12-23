@@ -8,11 +8,13 @@
 		<result property="type" column="type" />
 		<result property="priceDiscount" column="pricediscount" />
 		<result property="numPercent" column="numpercent" />
+		<result property="lotteryBaseNum" column="lotteryBaseNum" />
+		<result property="lotteryHitNum" column="lotteryHitNum" />
 		<result property="yn" column="yn" />
 	</resultMap>
 
 	<sql id="allFileds">
-		id,type,priceDiscount,numPercent,yn
+		id,type,priceDiscount,numPercent,lotteryBaseNum,lotteryHitNum,yn
 	</sql>
 	
 	<!-- 根据id批量查询阶梯规则 -->
@@ -34,8 +36,8 @@
 	
 	<!-- 添加新的阶梯信息 -->
 	<insert id="addLadder" parameterClass="ladderDAO">
-		insert into ladder (id,type,pricediscount,numpercent,yn) values
-		(#id#,#type#,#priceDiscount#,#numPercent#,#yn#)
+		insert into ladder (id,type,pricediscount,numpercent,lotteryBaseNum,lotteryHitNum,yn) values
+		(#id#,#type#,#priceDiscount#,#numPercent#,#lotteryBaseNum#,#lotteryHitNum#,#yn#)
         <selectKey keyProperty="id" resultClass="long">
             select LAST_INSERT_ID()
         </selectKey>
@@ -54,6 +56,12 @@
 				</isNotNull>
 				<isNotNull prepend=","  property="numPercent">
 					numpercent= #numPercent#
+				</isNotNull>
+				<isNotNull prepend=","  property="lotteryBaseNum">
+					lotteryBaseNum= #lotteryBaseNum#
+				</isNotNull>
+				<isNotNull prepend=","  property="lotteryHitNum">
+					lotteryHitNum= #lotteryHitNum#
 				</isNotNull>
 				<isNotNull prepend=","  property="yn">
 					yn= #yn#
@@ -88,6 +96,12 @@
 				</isNotNull>
 				<isNotNull prepend="and"  property="numPercent">
 					numpercent= #numPercent#
+				</isNotNull>
+				<isNotNull prepend=","  property="lotteryBaseNum">
+					lotteryBaseNum= #lotteryBaseNum#
+				</isNotNull>
+				<isNotNull prepend=","  property="lotteryHitNum">
+					lotteryHitNum= #lotteryHitNum#
 				</isNotNull>
 			</dynamic>
 	</select>

@@ -40,6 +40,16 @@ public class LadderAction extends BaseAction{
 	private String numPercent;
 	
 	/**
+	 * 抽奖时的概率，分母
+	 */
+	private Long lotteryBaseNum;
+	
+	/**
+	 * 抽奖时的概率，分子
+	 */
+	private Long lotteryHitNum;
+	
+	/**
 	 * 阶梯类型
 	 */
 	private Integer type;
@@ -74,6 +84,8 @@ public class LadderAction extends BaseAction{
 		try{
 			LadderBO ladderBO = new LadderBO();
 			ladderBO.setId(ladderId);
+			ladderBO.setLotteryBaseNum(lotteryBaseNum);
+			ladderBO.setLotteryHitNum(lotteryHitNum);
 			if(numPercent!=null){
 				ladderBO.setNumPercent(new BigDecimal(numPercent));
 			}
@@ -108,6 +120,8 @@ public class LadderAction extends BaseAction{
 			LadderBO ladderBO = new LadderBO();
 			ladderBO.setNumPercent(new BigDecimal(numPercent));
 			ladderBO.setPriceDiscount(new BigDecimal(priceDiscount));
+			ladderBO.setLotteryBaseNum(lotteryBaseNum);
+			ladderBO.setLotteryHitNum(lotteryHitNum);
 			ladderBO.setType(type);
 			ladderBO.setYn(isvaliade==1?true:false);
 			boolean addResult = iBackLadderService.addLadder(ladderBO);
@@ -140,6 +154,8 @@ public class LadderAction extends BaseAction{
 			ladderBO.setId(ladderId);
 			ladderBO.setNumPercent(new BigDecimal(numPercent));
 			ladderBO.setPriceDiscount(new BigDecimal(priceDiscount));
+			ladderBO.setLotteryBaseNum(lotteryBaseNum);
+			ladderBO.setLotteryHitNum(lotteryHitNum);
 			ladderBO.setType(type);
 			ladderBO.setYn(isvaliade==1?true:false);
 			boolean updateResult = iBackLadderService.updateLadder(ladderBO);
@@ -171,6 +187,8 @@ public class LadderAction extends BaseAction{
 		try{
 			LadderBO ladderBO = new LadderBO();
 			ladderBO.setId(ladderId);
+			ladderBO.setLotteryBaseNum(lotteryBaseNum);
+			ladderBO.setLotteryHitNum(lotteryHitNum);
 //			ladderBO.setNumPercent(new BigDecimal(numPercent));
 //			ladderBO.setPriceDiscount(new BigDecimal(priceDiscount));
 //			ladderBO.setType(type);
@@ -266,6 +284,22 @@ public class LadderAction extends BaseAction{
 
 	public void setLadderId(Long ladderId) {
 		this.ladderId = ladderId;
+	}
+
+	public Long getLotteryBaseNum() {
+		return lotteryBaseNum;
+	}
+
+	public void setLotteryBaseNum(Long lotteryBaseNum) {
+		this.lotteryBaseNum = lotteryBaseNum;
+	}
+
+	public Long getLotteryHitNum() {
+		return lotteryHitNum;
+	}
+
+	public void setLotteryHitNum(Long lotteryHitNum) {
+		this.lotteryHitNum = lotteryHitNum;
 	}
 
 }

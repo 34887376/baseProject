@@ -28,12 +28,12 @@
 	#if($ladderList)
 		<table class="table table-bordered table-striped">
 			<thead>
-				<th>阶梯规则id</th><th>价格折扣率</th><th>促销商品数量</th><th>阶梯类型</th><th>是否有效</th><th>操作编辑</th>
+				<th>阶梯规则id</th><th>价格折扣率</th><th>促销商品数量</th><th>中奖比率分母</th><th>中奖比率分子</th><th>阶梯类型</th><th>是否有效</th><th>操作编辑</th>
 			</thead>
 			<tbody id="ladderInfoBody">
 		#foreach( $ladderInfo in $ladderList)
 			<tr>
-				<td>$!{ladderInfo.id}</td><td>$!{ladderInfo.priceDiscount}</td><td>$!{ladderInfo.numPercent}</td><td>$!{ladderInfo.type}</td>
+				<td>$!{ladderInfo.id}</td><td>$!{ladderInfo.priceDiscount}</td><td>$!{ladderInfo.numPercent}</td><td>$!{ladderInfo.lotteryBaseNum}</td><td>$!{ladderInfo.lotteryHitNum}</td><td>$!{ladderInfo.type}</td>
 				#if(${ladderInfo.yn})
 					<td>有效</td>
 				#else
@@ -65,6 +65,11 @@
 				<div class="col-md-2 col-md-offset-1"><label>数量折扣率:<lable></div><div class="col-md-2"><input type="text" id="numPercent" placeholder="数量折扣率"></div>
 				<div class="col-md-1"></div>
 				<div class="col-md-2"><label>阶梯规则类型:<lable></div><div class="col-md-2"><input type="text" id="type" placeholder="阶梯规则类型"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>中奖比率分母:<lable></div><div class="col-md-2"><input type="text" id="lotteryBaseNum" placeholder="分母"></div>
+				<div class="col-md-1"></div>
+				<div class="col-md-2"><label>中奖比率分子:<lable></div><div class="col-md-2"><input type="text" id="lotteryHitNum" placeholder="分子"></div>
 			</div>
 			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
 			<div class="row">

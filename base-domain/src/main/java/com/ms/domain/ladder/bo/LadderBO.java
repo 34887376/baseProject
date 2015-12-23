@@ -13,7 +13,7 @@ public class LadderBO implements Serializable {
 	private Long id;
 	
 	/**
-	 * 价格折扣比率(商品原价的)
+	 * 价格折扣比率(商品原价的70%)
 	 */
 	private BigDecimal priceDiscount;
 	
@@ -23,7 +23,17 @@ public class LadderBO implements Serializable {
 	private BigDecimal numPercent;
 	
 	/**
-	 * 阶梯类型
+	 * 抽奖时的概率，分母
+	 */
+	private Long lotteryBaseNum;
+	
+	/**
+	 * 抽奖时的概率，分子
+	 */
+	private Long lotteryHitNum;
+	
+	/**
+	 * 阶梯类型一等奖，二等奖，三等奖参照字典DrawLotteryResutlDict
 	 */
 	private Integer type;
 	
@@ -71,5 +81,21 @@ public class LadderBO implements Serializable {
 
 	public void setYn(Boolean yn) {
 		this.yn = yn;
+	}
+
+	public Long getLotteryBaseNum() {
+		return lotteryBaseNum;
+	}
+
+	public void setLotteryBaseNum(Long lotteryBaseNum) {
+		this.lotteryBaseNum = lotteryBaseNum;
+	}
+
+	public Long getLotteryHitNum() {
+		return lotteryHitNum;
+	}
+
+	public void setLotteryHitNum(Long lotteryHitNum) {
+		this.lotteryHitNum = lotteryHitNum;
 	}
 }

@@ -23,6 +23,8 @@ public class LadderConvert {
 		ladderBO.setId(ladderDAO.getId());
 		ladderBO.setNumPercent(ladderDAO.getNumPercent());
 		ladderBO.setPriceDiscount(ladderDAO.getPriceDiscount());
+		ladderBO.setLotteryBaseNum(ladderDAO.getLotteryBaseNum());
+		ladderBO.setLotteryHitNum(ladderDAO.getLotteryHitNum());
 		ladderBO.setType(ladderDAO.getType());
 		ladderBO.setYn(ladderDAO.getYn());
 		return ladderBO;
@@ -41,6 +43,8 @@ public class LadderConvert {
 		ladderDAO.setId(ladderBO.getId());
 		ladderDAO.setNumPercent(ladderBO.getNumPercent());
 		ladderDAO.setPriceDiscount(ladderBO.getPriceDiscount());
+		ladderDAO.setLotteryBaseNum(ladderBO.getLotteryBaseNum());
+		ladderDAO.setLotteryHitNum(ladderBO.getLotteryHitNum());
 		ladderDAO.setType(ladderBO.getType());
 		ladderDAO.setYn(ladderBO.getYn());
 		return ladderDAO;
@@ -61,6 +65,8 @@ public class LadderConvert {
 			ladderBO.setId(ladderDAO.getId());
 			ladderBO.setNumPercent(ladderDAO.getNumPercent());
 			ladderBO.setPriceDiscount(ladderDAO.getPriceDiscount());
+			ladderBO.setLotteryBaseNum(ladderDAO.getLotteryBaseNum());
+			ladderBO.setLotteryHitNum(ladderDAO.getLotteryHitNum());
 			ladderBO.setType(ladderDAO.getType());
 			ladderBO.setYn(ladderDAO.getYn());
 			ladderBOList.add(ladderBO);

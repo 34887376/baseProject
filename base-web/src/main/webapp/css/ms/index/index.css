@@ -40,9 +40,24 @@
 	text-shadow: 5px 5px 5px #FF0000;
 	font:blod 12px "宋体";
 }
+/*展示内容的样式*/
+.contentShow{
+	position:relative; top:23px; left:1px;
+	height: 423px;
+	border:3px none #000;
+	margin: 5px 5px;
+}
+/*抢购未开始或者结束的样式*/
+.nostartStyle{
+	position:relative; top:-399px; left:1px;
+	background: url("http://img13.360buyimg.com/cms/jfs/t1894/319/607542735/4476/f52f7bd8/561b55ddN98f73f22.png") no-repeat scroll 50% 50%  rgba(0, 0, 0, 0.75);
+    display: block;
+    height: 423px;
+    width: 100%;
+}
 
 /*首页底部定位*/
 .indexBodyBootomDivStyle{
 	display: block;
-	margin-top:900px;
+	margin-top:1200px;
 }

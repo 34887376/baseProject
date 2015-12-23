@@ -15,7 +15,6 @@ import com.ms.domain.sku.dao.SkuDAO;
 
 public class PromotionDAOImpl extends BaseMysqlDAO implements IPromotionDAO {
 	
-	private Logger logger = Logger.getLogger(this.getClass());
 	
 	private static final String namespace="promotionTable.";
 

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="orderTable">
+
+	<typeAlias alias="prizeOrderDAO" type ="com.ms.domain.prize.order.dao.PrizeOrderDAO" />  
+	<resultMap id="prizeOrderResult" class="com.ms.domain.prize.order.dao.PrizeOrderDAO">
+		<result property="id" column="id" />
+		<result property="orderId" column="orderId" />
+		<result property="pin" column="pin" />
+		<result property="name" column="name" />
+		<result property="address" column="address" />
+		<result property="phone" column="phone" />
+		<result property="skuId" column="skuId" />
+		<result property="promotionId" column="promotionId" />
+		<result property="prizeType" column="prizeType" />
+		<result property="promotionPrice" column="promotionPrice" />
+		<result property="frightPrice" column="frightPrice" />
+		<result property="createTime" column="createTime" />
+		<result property="invalidTime" column="invalidTime" />
+		<result property="frightOrder" column="frightOrder" />
+		<result property="frightTrader" column="frightTrader" />
+		<result property="status" column="status" />
+		<result property="yn" column="yn" />
+	</resultMap>
+
+	<sql id="allFileds">
+		id,orderId,pin,name,address,phone,skuId,promotionId,prizeType,promotionPrice,frightPrice,createTime,invalidTime,frightOrder,frightTrader,status,yn
+	</sql>
+	
+	<!-- 添加新促销信息 -->
+	<insert id="addPrizeOrder" parameterClass="prizeOrderDAO">
+		insert into prizeorder (id,orderId,pin,name,address,phone,skuId,promotionId,prizeType,promotionPrice,frightPrice,createTime,invalidTime,frightOrder,frightTrader,status,yn) values
+		(#id#,#orderId#,#pin#,#name#,#address#,#phone#,#skuId#,#promotionId#,#prizeType#,#promotionPrice#,#frightPrice#,#createTime#,#invalidTime#,#frightOrder#,#frightTrader#,#status#,#yn#)
+        <selectKey keyProperty="id" resultClass="long">
+            select LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+
+	<!-- 更新促销信息 -->
+	<update id="updatePrizeOrder" parameterClass="prizeOrderDAO">
+		update prizeorder
+			<dynamic prepend="set">
+				<!-- isNotNull判断参数是否存在,Integer类型 -->
+				<isNotNull prepend=","  property="phone">
+					phone= #phone#
+				</isNotNull>
+				<isNotNull prepend=","  property="address">
+					address= #address#
+				</isNotNull>
+				<isNotNull prepend=","  property="status">
+					status= #status#
+				</isNotNull>
+				<isNotNull prepend=","  property="yn">
+					yn= #yn#
+				</isNotNull>
+			</dynamic>
+		where orderId=#orderId# and pin=#pin#
+	</update>
+	
+	<!--根据多个条件查询某一类促销信息-->
+	<select id="queryPrizeOrderByCondition" resultClass="prizeOrderDAO" parameterClass="prizeOrderDAO">
+		select <include refid="orderTable.allFileds" /> from prizeorder  
+			<dynamic prepend="where">
+				<!-- isNotNull判断参数是否存在,Integer类型 -->
+				<isNotNull prepend="and"  property="pin">
+					pin=#pin#
+				</isNotNull>
+				<isNotNull prepend="and"  property="orderId">
+					orderId=#orderId#
+				</isNotNull>
+				<isNotNull prepend="and"  property="phone">
+					phone= #phone#
+				</isNotNull>
+				<isNotNull prepend="and"  property="status">
+					status= #status#
+				</isNotNull>
+				<isNotNull prepend="and"  property="yn">
+					yn= #yn#
+				</isNotNull>
+			</dynamic>
+	</select>
+	
+	<!--根据页数查询促销信息-->
+	<select id="queryPrizeOrderListByPageNum" resultClass="prizeOrderDAO" parameterClass="java.util.Map">
+		select <include refid="orderTable.allFileds" /> from prizeorder where pin=#pin# limit #startIndex#,#endIndex#
+	</select>
+	
+	<!-- 批量删除促销信息 -->
+	<delete id="delPrizeOrder" parameterClass="prizeOrderDAO">
+		delete from prizeorder where id orderId=#orderId# and pin=#pin#
+	</delete>
+</sqlMap>

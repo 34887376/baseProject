@@ -1,0 +1,169 @@
+/*促销头部flash*/
+.promotionBodytopDivStyle{
+	display: block;
+	 position:relative; top:-20px; left:1px;
+	 width: 100%;
+	 padding: 1px 1px;
+	 border: 1px solid #000000;
+	 background-color: #f2f2f2;
+	 z-index:1002;
+	 overflow: auto;
+	 text-align:center;
+}
+
+/*促销内容样式*/
+.promotionBodyContentDivStyle{
+	display: block;
+	position:relative;left:282px;top: -11px;
+	margin-top: 5px;
+	text-align:left;
+	width:1353px;
+	background-color: #f2f2f2;
+	
+}
+
+/*商品详情样式*/
+.skuDetailInfo{
+	position:relative;left:1px;
+	height: 466px;
+}
+
+/*商品图片样式*/
+.skuDetailImgInfo{
+	position:relative;left:20px;top:18px;
+	text-align:center;
+	width:350px;
+}
+
+/*商品名称*/
+.skuSkuNameShow{
+	position:relative;left:430px;top:-309px;
+	text-align:left;
+	margin:10px 5px;
+	width: 500px;
+	background-color: #ffffff;
+}
+
+/*商品名称，价格字体样式*/
+.skuNameFontStyle, .skuPriceFontStyle{
+	color:black;
+	font-weight:bold;
+	font-size:23px;
+	font-family:"宋体";
+	font-style:normal;
+}
+
+/*商品促销语字体样式*/
+.skuAdvertFontStyle{
+	color:red;
+	font-weight:bold;
+	font-size:23px;
+	font-family:"宋体";
+	font-style:normal;
+}
+
+/*商品促销语div样式*/
+.skuAdvertShow{
+	position:relative;left:430px;top:-309px;
+	text-align:left;
+	margin:10px 5px;
+	width: 500px;
+	height:60px;
+	background-color: #ffffff;
+}
+
+/*商品价格*/
+.skuPriceShow{
+	position:relative;left:430px;top:-309px;
+	text-align:left;
+	margin:10px 5px;
+	width: 500px;
+	height:180px;
+	background-color: #ffffff;
+}
+
+/*抢购按钮div*/
+.killbuttonShow{
+	position:relative;left:530px;top:-309px;
+	text-align:left;
+	margin:10px 5px;
+	width: 500px;
+	height:180px;
+}
+
+
+/*抢购按钮样式*/
+.buttonStyle{
+	background-color: #ff0000;
+	line-height: 65px;
+	width: 240px;
+	text-align: center;
+	font-weight: bold;
+	font-size:36px;
+	font-family:'microsoft yahei';
+	font-style:normal;
+	color: #fff;
+	text-shadow:1px 1px 1px #333;
+	border-radius: 5px;
+	margin:0 20px 20px 0;
+	
+}
+
+/*抽奖div隐藏样式*/
+.lotteryDivHiddenStyle{
+	 display: none;
+}
+
+/*抽奖div显示样式*/
+.lotteryDivShowStyle{
+	 display: block;
+	 position: absolute;
+	 top: 15%;
+	 left: 30%;
+	 width: 46%;
+	 height:660px;
+	 padding: 6px 3px;
+	 border: 1px solid #BEBEBE;
+	 background-color: white;
+	 z-index:1002;
+	 overflow: auto;
+     margin-bottom: 38px;
+}
+
+.lotteryDivShowStyle closebutton{
+	cursor:pointer;
+	width: 70px;
+	float:right;
+	text-align:right;
+    height: 26px;
+    margin-top: -6px;
+   	font-size:12px;
+	font-family:'宋体';
+	font-style:normal;
+	color: #0000FF;
+}
+
+.divCloseButtonStyle{
+	background-color: #D6E9F1;
+	line-height: 20px;
+	width: 50px;
+}
+
+.htmlDivcontentStyle{
+	 position: relative;
+	 top: 20px;
+	 width: 100%;
+	 height:620px;
+	 background-color: #fbfbfb;
+	 z-index:1003;
+	 overflow: auto;
+}
+
+
+
+
+/*促销底部定位*/
+.promotionBodyBootomDivStyle{
+	display: block;
+	margin-top:900px;
+}

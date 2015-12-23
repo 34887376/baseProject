@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="orderIDTable">
+
+	<typeAlias alias="orderIdDAO" type ="com.ms.domain.orderid.dao.OrderIdDAO" />  
+	
+	<insert id="queryNewOrderId" parameterClass="orderIdDAO">
+		insert into orderid (id) values
+		(#id#)
+        <selectKey keyProperty="id" resultClass="long">
+            select LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+</sqlMap>

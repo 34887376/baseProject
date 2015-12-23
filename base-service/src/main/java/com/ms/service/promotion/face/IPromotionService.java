@@ -64,4 +64,12 @@ public interface IPromotionService {
 	 */
 	List<PromotionBriefBOInfo> queryLastPromotionInfoForIndex(int num);
 	
+	/**
+	 * 根据用户pin和促销id进行抽奖
+	 * @param pin
+	 * @param promotionId
+	 * @return
+	 */
+	int drawLottery(String pin, long promotionId, String clientIp, String uuid);
+	
 }

@@ -163,6 +163,8 @@ function updateLadder(){
 	$('#ladderId').attr("disabled",true);
 	var priceDiscount=$("#priceDiscount").val();
 	var numPercent=$("#numPercent").val();
+	var lotteryBaseNum=$("#lotteryBaseNum").val();
+	var lotteryHitNum=$("#lotteryHitNum").val();
 	var type=$("#type").val();
 	var isvaliade=$("input[name='isvaliade']:checked").val();
 
@@ -194,9 +196,21 @@ function updateLadder(){
 		return;
 	}
 	
+	if (isNullValue(lotteryBaseNum)) {
+		$("#tipInfo").text("请输入分母的值");
+		$("#lotteryBaseNum").focus();
+		return;
+	}
+	
+	if (isNullValue(lotteryHitNum)) {
+		$("#tipInfo").text("请输入分子的值");
+		$("#lotteryHitNum").focus();
+		return;
+	}
+	
 
 	
-	var param = "ladderId="+ladderId+"&priceDiscount="+priceDiscount+"&numPercent="+numPercent+"&type="+type+"&isvaliade="+isvaliade+"&r="+(new Date()).getTime();
+	var param = "ladderId="+ladderId+"&priceDiscount="+priceDiscount+"&numPercent="+numPercent+"&type="+type+"&isvaliade="+isvaliade+"&lotteryBaseNum="+lotteryBaseNum+"&lotteryHitNum="+lotteryHitNum+"&r="+(new Date()).getTime();
 	$.ajax({
 		  url: "/backstage/ladder/updateLadder.action",
 	      type: "POST",
@@ -225,6 +239,8 @@ function submitLadder(){
 	$('#ladderId').attr("disabled",true);
 	var priceDiscount=$("#priceDiscount").val();
 	var numPercent=$("#numPercent").val();
+	var lotteryBaseNum=$("#lotteryBaseNum").val();
+	var lotteryHitNum=$("#lotteryHitNum").val();
 	var type=$("#type").val();
 	var isvaliade=$("input[name='isvaliade']:checked").val();
 
@@ -255,9 +271,21 @@ function submitLadder(){
 		return;
 	}
 	
+	if (isNullValue(lotteryBaseNum)) {
+		$("#tipInfo").text("请输入分母的值");
+		$("#lotteryBaseNum").focus();
+		return;
+	}
+	
+	if (isNullValue(lotteryHitNum)) {
+		$("#tipInfo").text("请输入分子的值");
+		$("#lotteryHitNum").focus();
+		return;
+	}
+	
 
 	
-	var param = "ladderId="+ladderId+"&priceDiscount="+priceDiscount+"&numPercent="+numPercent+"&type="+type+"&isvaliade="+isvaliade+"&r="+(new Date()).getTime();
+	var param = "ladderId="+ladderId+"&priceDiscount="+priceDiscount+"&numPercent="+numPercent+"&type="+type+"&isvaliade="+isvaliade+"&lotteryBaseNum="+lotteryBaseNum+"&lotteryHitNum="+lotteryHitNum+"&r="+(new Date()).getTime();
 	$.ajax({
 		  url: "/backstage/ladder/addLadder.action",
 	      type: "POST",

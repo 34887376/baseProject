@@ -14,6 +14,8 @@ import org.apache.log4j.Logger;
 
 import base.test.base.util.JsonUtil;
 
+import com.ms.domain.business.constant.LadderTypeDict;
+import com.ms.domain.business.constant.PromotionStatusConstant;
 import com.ms.domain.convert.PromotionConvert;
 import com.ms.domain.ladder.bo.LadderBO;
 import com.ms.domain.ladder.dao.LadderDAO;
@@ -76,6 +78,7 @@ public class PromotionServiceImpl implements IPromotionService {
 	//阶梯规则信息service
 	private ILadderService iLadderService;
 	
+	private static final int MAX_LOTTERY_TIMES =3;
 
 	public PromotionBO queryPromotionById(Long promotionId) {
 		PromotionBO promotionBO =new PromotionBO();
@@ -388,7 +391,7 @@ public class PromotionServiceImpl implements IPromotionService {
 				ladderIdMapLadderPromotionId.put(ladderPromotionBO.getLadderId(),ladderPromotionBO.getLadderPromotionId());
 			}
 			
-			//3.2 查询阶梯规则中的最大折扣力度
+			//3.2 查询阶梯规则
 			List<LadderBO> ladderBOList = iLadderService.queryLadderByIds(ladderIdList);
 			List<LadderPromotionInfoBO> ladderPromotionList =  new ArrayList<LadderPromotionInfoBO>();
 			for(LadderBO ladderBO : ladderBOList){
@@ -495,6 +498,165 @@ public class PromotionServiceImpl implements IPromotionService {
 		return promotionBriefInfoBOList;
 	}
 	
+	public int drawLottery(String pin, long promotionId, String clientIp, String uuid){
+		//返回码定义，-101未抽中，-102抽奖次数已经用完；-201活动未进行；-401系统异常;101一等奖，102二等奖，103三等奖
+		int resultCode = -1;
+		try{
+			//检查活动的状态
+			PromotionSequenceBO promotionSequenceBO = iPromotionSequenceService.queryPromotionSequenceByPromotionId(promotionId);
+			if(promotionSequenceBO!=null){
+				if(promotionSequenceBO.getStatus()!=PromotionStatusConstant.START_PROMOTION){
+					return -201;
+				}
+			}
+			
+			//检查抽奖次数
+			String lotteryTimesRedisKey = RedisKeyPrefixConstant.USER_LOTTERY_NUM_PRIFIXE+pin+promotionId;
+			String lotteryNum = iPromotionRedis.getValue(lotteryTimesRedisKey);
+			if(StringUtils.isEmpty(lotteryNum)){
+				iPromotionRedis.setValue(lotteryTimesRedisKey, "1", RedisKeyPrefixConstant.USER_LOTTERY_NUM_TIME);
+			}else{
+				if(Integer.valueOf(lotteryNum) > MAX_LOTTERY_TIMES){
+					return -102;
+				}
+			}
+			int lotteryOldNum = Integer.parseInt(lotteryNum);
+			
+			//检查是否抽中过奖
+			String lotteryLevelRedisKey = RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_PRIFIXE+pin+promotionId;
+			String lotteryLevel = iPromotionRedis.getValue(lotteryLevelRedisKey);
+			//抽奖次数加一
+			if(StringUtils.isNotBlank(lotteryLevel)){
+				iPromotionRedis.setValue(lotteryTimesRedisKey, String.valueOf(lotteryOldNum++), RedisKeyPrefixConstant.USER_LOTTERY_NUM_TIME);
+				return Integer.valueOf(lotteryLevel);
+			}
+			
+//			String firstPrizeBaseNumStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_FIRST_BASENUM_PROMOTION_PRIFIXE+promotionId);
+//			String firstPrizeHitStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_FIRST_HITNUM_PROMOTION_PRIFIXE+promotionId);
+//			String secondPrizeBaseNumStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_SECONDE_BASENUM_PROMOTION_PRIFIXE+promotionId);
+//			String secondPrizeHitStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_SECONDE_HITNUM_PROMOTION_PRIFIXE+promotionId);
+//			String thirdPrizeBaseNumStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_THIRD_BASENUM_PROMOTION_PRIFIXE+promotionId);
+//			String thirdPrizeHitStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_THIRD_HITNUM_PROMOTION_PRIFIXE+promotionId);
+//			
+//			if(StringUtils.isBlank(firstPrizeBaseNumStr)|| StringUtils.isBlank(firstPrizeHitStr) || StringUtils.isBlank(secondPrizeBaseNumStr)||StringUtils.isBlank(secondPrizeHitStr)
+//					||StringUtils.isBlank(thirdPrizeBaseNumStr)||StringUtils.isBlank(thirdPrizeHitStr)){
+//				long firstPrizeBaseNum = Long.parseLong(iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_FIRST_BASENUM_PROMOTION_PRIFIXE+promotionId));
+//				long firstPrizeHitNum = Long.parseLong(iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_FIRST_HITNUM_PROMOTION_PRIFIXE+promotionId));
+//				long secondPrizeBaseNum = Long.parseLong(iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_SECONDE_BASENUM_PROMOTION_PRIFIXE+promotionId));
+//				long secondPrizeHitNum = Long.parseLong(iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_SECONDE_HITNUM_PROMOTION_PRIFIXE+promotionId));
+//				long thirdPrizeBaseNum = Long.parseLong(iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_THIRD_BASENUM_PROMOTION_PRIFIXE+promotionId));
+//				long thirdPrizeHitNum = Long.parseLong(iPromotionRedis.getValue(RedisKeyPrefixConstant.PRIZE_THIRD_HITNUM_PROMOTION_PRIFIXE+promotionId));
+//			}else{
+//				
+//			}
+			
+			//实际抽奖逻辑
+			return drawLottery(promotionId,pin,uuid,clientIp,lotteryLevelRedisKey,lotteryTimesRedisKey,lotteryOldNum);
+		}catch(Exception e){
+			logger.error("PromotionServiceImpl.drawLottery抽奖时发生异常，入参{pin="+JsonUtil.toJson(pin)+" ,  promotionId="+promotionId+" }", e);
+			return -401;
+		}
+	}
+	
+	private int drawLottery(long promotionId,String pin,String uuid, String clientIp,String lotteryLevelRedisKey,String lotteryTimesRedisKey,int lotteryOldNum){
+		//检查奖品数量
+		PromotionBO promotionInfo = queryPromotionById(promotionId);
+		SkuBO skuInfo = iSkuService.querySkuById(promotionInfo.getSkuId());
+		
+		//查询中奖的概率
+		List<LadderPromotionBO> ladderPromotionList = iLadderPromotionService.queryLadderPromotionByPromotionId(promotionId);
+		if(CollectionUtils.isEmpty(ladderPromotionList)){
+			return -401;
+		}
+		
+		List<Long> ladderIdList= new ArrayList<Long>();
+		for(LadderPromotionBO ladderPromotionBO : ladderPromotionList){
+			if(ladderPromotionBO!=null){
+				ladderIdList.add(ladderPromotionBO.getLadderId());
+			}
+		}
+		List<LadderBO> ladderList = iLadderService.queryLadderByIds(ladderIdList);
+		if(CollectionUtils.isEmpty(ladderList)){
+			return -401;
+		}
+		
+		Map<Integer, Long> baseNumMap = new HashMap<Integer, Long>();
+		Map<Integer, Long> hitNumMap = new HashMap<Integer, Long>();
+		Map<Integer, Integer> prizeNumMap = new HashMap<Integer, Integer>();
+		
+		for(LadderBO ladderBO : ladderList){
+			if(ladderBO!=null){
+				baseNumMap.put(ladderBO.getType(), ladderBO.getLotteryBaseNum());
+				hitNumMap.put(ladderBO.getType(), ladderBO.getLotteryHitNum());
+				prizeNumMap.put(ladderBO.getType(), ladderBO.getNumPercent().divide(new BigDecimal("100")).multiply(new BigDecimal(skuInfo.getNum())).intValue());
+			}
+		}
+		
+		//计算是否中奖，抽奖次数加一
+		StringBuilder baseHashSeed= new StringBuilder(pin);
+		baseHashSeed.append(System.currentTimeMillis()).append(promotionId).append(clientIp).append(uuid);
+		int hashResult = baseHashSeed.hashCode();
+		if(checkIsHit(hashResult, LadderTypeDict.FIRST_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
+			//记录用户的抽奖结果
+			iPromotionRedis.setValue(lotteryLevelRedisKey,"101",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
+			return 101;
+		}else if(checkIsHit(hashResult, LadderTypeDict.SECONDE_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
+			iPromotionRedis.setValue(lotteryLevelRedisKey,"102",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
+			return 102;
+		}else if(checkIsHit(hashResult, LadderTypeDict.THIRD_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
+			iPromotionRedis.setValue(lotteryLevelRedisKey,"103",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
+			return 103;
+		}
+		//记录用户的有效抽奖次数
+		iPromotionRedis.setValue(lotteryTimesRedisKey, String.valueOf(++lotteryOldNum), RedisKeyPrefixConstant.USER_LOTTERY_NUM_TIME);
+		return -101;
+	}
+	
+	/**
+	 * 计算是否中奖
+	 * @param hashResult
+	 * @param prizType
+	 * @param promotionId
+	 * @param baseNumMap
+	 * @param hitNumMap
+	 * @param prizeNumMap
+	 * @return
+	 */
+	private boolean checkIsHit(int hashResult, int prizType,long promotionId,Map<Integer, Long> baseNumMap,Map<Integer, Long> hitNumMap,Map<Integer, Integer> prizeNumMap){
+		
+		int prizeTotalHitNum = -1;
+		String redisKey=null;
+		
+		if(prizType==LadderTypeDict.FIRST_PRIZE){
+			redisKey = "firstPrizHitNum"+promotionId+LadderTypeDict.FIRST_PRIZE;
+		}else if(prizType==LadderTypeDict.SECONDE_PRIZE){
+			redisKey = "secondPrizHitNum"+promotionId+LadderTypeDict.SECONDE_PRIZE;
+		}else if(prizType==LadderTypeDict.THIRD_PRIZE){
+			redisKey = "thirdPrizHitNum"+promotionId+LadderTypeDict.THIRD_PRIZE;
+		}
+		String prizeTotalHitNumStr = iPromotionRedis.getValue(redisKey);
+		if(StringUtils.isNotBlank(prizeTotalHitNumStr)){
+			prizeTotalHitNum = Integer.parseInt(prizeTotalHitNumStr);
+		}
+		
+		//检查中奖的总数量
+		if(prizeNumMap.get(prizType) < prizeTotalHitNum){
+			return false;
+		}
+		
+		//检查中奖概率
+		if(hitNumMap.get(prizType) >0){
+			return false;
+		}
+		
+		//检查是否中奖
+		if(hashResult%(baseNumMap.get(prizType)) < hitNumMap.get(prizType)){
+			//抽中将后将商品的数量加一
+			iPromotionRedis.setValue(redisKey,String.valueOf(++prizeTotalHitNum), RedisKeyPrefixConstant.PRIZE_HITNUM_TIME);
+			return true;
+		}
+		return false;
+	}
 	
 	public void refrashPromotion(){
 		

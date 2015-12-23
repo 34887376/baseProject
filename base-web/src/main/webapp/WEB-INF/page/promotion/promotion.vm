@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" /> 
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="#ffffff" name="msapplication-TileColor" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <title>靠谱APP</title>
+    <link href="../../../css/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet">
+    <link href="../../../css/ms/promotion/promotion.css" rel="stylesheet">
+
+</head> 
+<body>
+<div>
+	#parse("/htmlPage/common/header.vm")
+	<div id="indexBodytop" class="promotionBodytopDivStyle">
+		<!--flash
+		<object id="flash_obj" width="300" height="250" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" type="application/x-shockwave-flash">
+			<param value="http://ubmcmm.baidustatic.com/media/v1/0f000DH-9QBJy6hnLq-Jj0.swf" name="movie">
+			<param value="high" name="quality">
+			<param value="always" name="AllowScriptAccess">
+			<param value="opaque" name="wmode">
+			<param value="" name="FlashVars">
+			<embed width="300" height="250" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="always" quality="high" src="http://ubmcmm.baidustatic.com/media/v1/0f000DH-9QBJy6hnLq-Jj0.swf" wmode="opaque">
+		</object>-->
+		<!--img-->
+		<img width="1210" height="80" src="//img10.360buyimg.com/da/jfs/t1963/54/1101337437/88594/b0525f82/5667c50dNec0f2b0a.jpg">
+	</div>
+	<div id="promotionBodyContent" class="promotionBodyContentDivStyle">
+		<div id="skuInfo" class="skuDetailInfo">
+			<div id="skuImg" class="skuDetailImgInfo">
+				<img width="350" height="350" alt="CNCN 百分百羊毛新款男装羊毛衫男士套头V领毛衫NYYY4670 橙色 175" src="//img10.360buyimg.com/n1/jfs/t1897/272/588771888/158370/4498b10/561874e6N4f3d195c.jpg">
+			</div>
+			<div id="skuName" class="skuSkuNameShow"><lable class="skuNameFontStyle">测试商品1</lable></div>
+			<div id="skuAdvert" class="skuAdvertShow">
+				<div id="skuAdvert" class="skuDetailAdvert"><lable class="skuAdvertFontStyle">广告语</lable></div>
+			</div>
+			<div id="skuPrice" class="skuPriceShow">
+				<div id="price1" class="skuDetailPrice"><lable class="skuPriceFontStyle">一等奖：限量10个        价格￥10.00</lable></div>
+				<div id="price2" class="skuDetailPrice"><lable class="skuPriceFontStyle">二等奖：限量20个        价格￥10.00</lable></div>
+				<div id="price3" class="skuDetailPrice"><lable class="skuPriceFontStyle">三等奖：限量30个        价格￥10.00</lable></div>
+			</div>
+			<div id="killbutton" class="killbuttonShow"><input type="button" class="buttonStyle" onclick="showLotteryPopDiv();" value="抽     奖"></div>
+		</div>
+		<hr style="height:10px;size:5;border:3px;border-top:1px solid #FF0066;"/>
+		<div id="ruleInfo" >
+			<div class="container-fluid">
+			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+			<div class="row">
+				<table>
+					<tr>
+						<td>
+							   2015年12月9日，京东集团与广州市人民政府正式签署战略合作协议，双方将依据“互联网+”战略，围绕跨境电商、专业市场电商化升级、加快电子商务运营载体和流通基础设施建设等领域开展全方位合作，在促进广州市产业结构转型升级的同时，强化京东“立足广州，辐射华南”的业务发展布局，
+							从而建立起推动华南区域市场快速发展的有力支点。
+							<br/>
+							         广州市委书记任学锋会见了京东集团首席执行官刘强东一行，他表示，广州依托大交通枢纽地位和体系较完备的物流配送体系，加快布局推进国际航运中心和物流中心、贸易中心建设，已经初步形成传统商贸与电子商务相互促进的格局。“十三五”期间，广州将加快实施“互联网+”行动计划，
+							营造基于互联网、移动互联网的创新生态，大力发展电子商务、现代物流、云计算、大数据产业和网络经济、平台经济、分享经济，促进互联网与经济社会深度融合。希望京东集团发挥优势，抓住机遇进一步拓展在穗业务。 
+						</td>
+					</tr>
+				</table>
+			</div>
+			</div>
+		</div>
+	</div>
+	
+   	<div id="promtionBodyBootom" class="promotionBodyBootomDivStyle">
+    	#parse("/htmlPage/common/bottom.html")
+    </div>
+    <div id="showLotteryDiv" class="lotteryDivShowStyle">
+    	<closebutton onclick="closeLotteryPopDiv();">关闭按钮</closebutton>
+    	<div id="lotteryContent">
+    	</div>
+    </div>
+</div>
+
+  	<script src="../../../js/jquery-1.11.3/jquery-1.11.3.min.js?r=20150707"></script>
+	<script src="../../../js/bootstrap-3.3.5/bootstrap.js?r=20150707"></script>
+	<script src="../../../js/common/utils.js?r=20150707"></script>
+	<script src="../../../js/ms/promotion/promotion.js?r=20150707"></script>
+
+</body>
+</html>

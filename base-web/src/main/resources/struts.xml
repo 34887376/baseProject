@@ -63,5 +63,6 @@
 	<include file="struts/struts-login.xml" />
 	<include file="struts/struts-index.xml" />
 	<include file="struts/struts-backStage.xml" />
+	<include file="struts/struts-promotion.xml" />
 	
 </struts>

@@ -11,5 +11,7 @@
 	<sqlMap resource="sqlmapping/ladderPromotionDao.xml" />
 	<sqlMap resource="sqlmapping/promotionDao.xml" />
 	<sqlMap resource="sqlmapping/promotionSequenceDao.xml" />
+	<sqlMap resource="sqlmapping/prizeOrderDao.xml" />
+	<sqlMap resource="sqlmapping/orderIdDao.xml" />
 
 </sqlMapConfig>
