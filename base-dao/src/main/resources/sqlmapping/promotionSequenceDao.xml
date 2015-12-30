@@ -62,6 +62,9 @@
 		select <include refid="promotionSequenceTable.allFileds" /> from promotionsequence 
 			<dynamic prepend="where">
 				<!-- isNotNull判断参数是否存在,Integer类型 -->
+				<isNotNull prepend="and"  property="id">
+					id= #id#
+				</isNotNull>
 				<isNotNull prepend="and"  property="promotionId">
 					promotionid= #promotionId#
 				</isNotNull>

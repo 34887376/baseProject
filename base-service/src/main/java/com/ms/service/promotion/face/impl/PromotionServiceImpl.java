@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import base.test.base.util.JsonUtil;
 
+import com.ms.domain.business.constant.DrawLotteryResutlDict;
 import com.ms.domain.business.constant.LadderTypeDict;
 import com.ms.domain.business.constant.PromotionStatusConstant;
 import com.ms.domain.convert.PromotionConvert;
@@ -160,9 +161,10 @@ public class PromotionServiceImpl implements IPromotionService {
 		try {
 			List<PromotionDAO> promotionDAOList = iPromotionDAO.queryPromotionsByIds(idList);
 			if(CollectionUtils.isNotEmpty(promotionDAOList)){
-				for(PromotionDAO promotionDAO : promotionDAOList){
-					promotionList.add(PromotionConvert.convertDAOTOBO(promotionDAO));
-				}
+				promotionList = PromotionConvert.convertDAOTOBOList(promotionDAOList);
+//				for(PromotionDAO promotionDAO : promotionDAOList){
+//					promotionList.add(PromotionConvert.convertDAOTOBO(promotionDAO));
+//				}
 			}
 		} catch (Exception e) {
 			logger.error("PromotionServiceImpl.queryPromotionsByIds查询促销信息时发生异常，入参{idList="+JsonUtil.toJson(idList)+"}", e);
@@ -206,7 +208,7 @@ public class PromotionServiceImpl implements IPromotionService {
 		try {
 			List<Long> promotionIdList = new ArrayList<Long>();
 			//获取设置的第一条促销id
-			String startPromotionIndexKey=RedisKeyPrefixConstant.START_PROMOTION_INDEX;
+			String startPromotionIndexKey=RedisKeyPrefixConstant.START_PROMOTION_SEQUENCE_INDEX;
 			String startPromotionId = iPromotionRedis.getValue(startPromotionIndexKey);
 			if(StringUtils.isBlank(startPromotionId)){
 				return promotionInfoBOList;
@@ -271,7 +273,7 @@ public class PromotionServiceImpl implements IPromotionService {
 		List<PromotionDetailInfoBO> promotionInfoBOList = new ArrayList<PromotionDetailInfoBO>();
 		try {
 			
-			String startPromotionIndexKey=RedisKeyPrefixConstant.START_PROMOTION_INDEX;
+			String startPromotionIndexKey=RedisKeyPrefixConstant.START_PROMOTION_SEQUENCE_INDEX;
 			
 			//如果查询出的促销信息不够num个，则再进行10次redis查询，如果查询10次redis仍然不够num个，则查到多少返回多少
 			int hasPromotionNum = promotionIdList.size();
@@ -419,28 +421,31 @@ public class PromotionServiceImpl implements IPromotionService {
 		List<PromotionBriefBOInfo> promotionBriefInfoBOList = new ArrayList<PromotionBriefBOInfo>();
 		try {
 			List<Long> promotionIdList = new ArrayList<Long>();
-			//获取设置的第一条促销id
-			String startPromotionIndexKey=RedisKeyPrefixConstant.START_PROMOTION_INDEX;
-			String startPromotionId = iPromotionRedis.getValue(startPromotionIndexKey);
-			if(StringUtils.isBlank(startPromotionId)){
+			//获取设置的第一条促销序列id
+			String startPromotionSeqIndexKey=RedisKeyPrefixConstant.START_PROMOTION_SEQUENCE_INDEX;
+			String startPromotionSeqIdFromRedis = iPromotionRedis.getValue(startPromotionSeqIndexKey);
+			if(StringUtils.isBlank(startPromotionSeqIdFromRedis)){
 				return promotionBriefInfoBOList;
 			}
-			promotionIdList.add(Long.parseLong(startPromotionId));
+			Long startPromotionSeqId = Long.parseLong(startPromotionSeqIdFromRedis);
 			//记录促销和状态的关系
 			Map<Long,Integer> promotionMapStatus = new HashMap<Long,Integer>();
 			//查询redis中的前num个促销信息;如果缓存中没有则查库，并写入到缓存
 			for(int promotionNum=0;promotionNum<num;promotionNum++){
 				//根据startPromotionId查询该促销信息
-				PromotionSequenceBO promotionSequenceBO = iPromotionSequenceService.queryPromotionSequenceByPromotionId(Long.parseLong(startPromotionId));
+				PromotionSequenceBO promotionSequenceBO = iPromotionSequenceService.queryPromotionSequenceById(startPromotionSeqId);
 				if(promotionSequenceBO!=null){
-					promotionMapStatus.put(Long.parseLong(startPromotionId), promotionSequenceBO.getStatus());
-					long nextQueryPromotionSequenceId = promotionSequenceBO.getNextOrder();
-					PromotionSequenceBO nextPromotionFromDB = iPromotionSequenceService.queryPromotionSequenceById(nextQueryPromotionSequenceId);
-					if(nextPromotionFromDB!=null){
-						Long nextPromotionIdFromDB = nextPromotionFromDB.getPromotionId();
-						promotionIdList.add(nextPromotionIdFromDB);
-						startPromotionId = String.valueOf(nextPromotionIdFromDB);
-					}
+					promotionIdList.add(promotionSequenceBO.getPromotionId());
+					promotionMapStatus.put(promotionSequenceBO.getPromotionId(), promotionSequenceBO.getStatus());
+					startPromotionSeqId = promotionSequenceBO.getNextOrder();
+					
+//					PromotionSequenceBO nextPromotionFromDB = iPromotionSequenceService.queryPromotionSequenceById(nextQueryPromotionSequenceId);
+//					if(nextPromotionFromDB!=null){
+//						Long nextPromotionIdFromDB = nextPromotionFromDB.getPromotionId();
+////						promotionIdList.add(nextPromotionIdFromDB);
+////						startPromotionId = String.valueOf(nextPromotionIdFromDB);
+//						
+//					}
 				}
 			}
 			if(CollectionUtils.isEmpty(promotionIdList)){
@@ -474,6 +479,9 @@ public class PromotionServiceImpl implements IPromotionService {
 				//3. 查询阶梯促销信息
 				//3.1 根据促销id查询阶梯规则列表
 				List<LadderPromotionBO> ladderPromotionBOList = iLadderPromotionService.queryLadderPromotionByPromotionId(promotionBO.getId());
+				if(CollectionUtils.isEmpty(ladderPromotionBOList)){
+					continue;
+				}
 				List<Long> ladderIdList =  new ArrayList<Long>();
 				for(LadderPromotionBO ladderPromotionBO : ladderPromotionBOList){
 					ladderIdList.add(ladderPromotionBO.getLadderId());
@@ -481,6 +489,9 @@ public class PromotionServiceImpl implements IPromotionService {
 				
 				//3.2 查询阶梯规则中的最大折扣力度
 				List<LadderBO> ladderBOList = iLadderService.queryLadderByIds(ladderIdList);
+				if(CollectionUtils.isEmpty(ladderBOList)){
+					continue;
+				}
 				BigDecimal maxDiscount= new BigDecimal("-1");
 				for(LadderBO ladderBO : ladderBOList){
 					if(maxDiscount.compareTo(ladderBO.getPriceDiscount()) >= 0){
@@ -596,14 +607,14 @@ public class PromotionServiceImpl implements IPromotionService {
 		StringBuilder baseHashSeed= new StringBuilder(pin);
 		baseHashSeed.append(System.currentTimeMillis()).append(promotionId).append(clientIp).append(uuid);
 		int hashResult = baseHashSeed.hashCode();
-		if(checkIsHit(hashResult, LadderTypeDict.FIRST_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
+		if(checkIsHit(hashResult, DrawLotteryResutlDict.HIT_FIRST_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
 			//记录用户的抽奖结果
 			iPromotionRedis.setValue(lotteryLevelRedisKey,"101",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
 			return 101;
-		}else if(checkIsHit(hashResult, LadderTypeDict.SECONDE_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
+		}else if(checkIsHit(hashResult, DrawLotteryResutlDict.HIT_SECONDE_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
 			iPromotionRedis.setValue(lotteryLevelRedisKey,"102",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
 			return 102;
-		}else if(checkIsHit(hashResult, LadderTypeDict.THIRD_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
+		}else if(checkIsHit(hashResult, DrawLotteryResutlDict.HIT_THIRD_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
 			iPromotionRedis.setValue(lotteryLevelRedisKey,"103",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
 			return 103;
 		}
@@ -627,12 +638,12 @@ public class PromotionServiceImpl implements IPromotionService {
 		int prizeTotalHitNum = -1;
 		String redisKey=null;
 		
-		if(prizType==LadderTypeDict.FIRST_PRIZE){
-			redisKey = "firstPrizHitNum"+promotionId+LadderTypeDict.FIRST_PRIZE;
-		}else if(prizType==LadderTypeDict.SECONDE_PRIZE){
-			redisKey = "secondPrizHitNum"+promotionId+LadderTypeDict.SECONDE_PRIZE;
-		}else if(prizType==LadderTypeDict.THIRD_PRIZE){
-			redisKey = "thirdPrizHitNum"+promotionId+LadderTypeDict.THIRD_PRIZE;
+		if(prizType==DrawLotteryResutlDict.HIT_FIRST_PRIZE){
+			redisKey = "firstPrizHitNum"+promotionId+DrawLotteryResutlDict.HIT_FIRST_PRIZE;
+		}else if(prizType==DrawLotteryResutlDict.HIT_SECONDE_PRIZE){
+			redisKey = "secondPrizHitNum"+promotionId+DrawLotteryResutlDict.HIT_SECONDE_PRIZE;
+		}else if(prizType==DrawLotteryResutlDict.HIT_THIRD_PRIZE){
+			redisKey = "thirdPrizHitNum"+promotionId+DrawLotteryResutlDict.HIT_THIRD_PRIZE;
 		}
 		String prizeTotalHitNumStr = iPromotionRedis.getValue(redisKey);
 		if(StringUtils.isNotBlank(prizeTotalHitNumStr)){

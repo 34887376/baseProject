@@ -45,17 +45,17 @@
 								<table>
 									<tr>
 										<td>
-											<label class="contentTextNameStyle">测试商品1</label>
+											<label class="contentTextNameStyle">$!{promotion.skuName}</label>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<img width="350" height="350" alt="CNCN 百分百羊毛新款男装羊毛衫男士套头V领毛衫NYYY4670 橙色 175" src="//img10.360buyimg.com/n1/jfs/t1897/272/588771888/158370/4498b10/561874e6N4f3d195c.jpg">
+											<img width="350" height="350" alt="$!{promotion.skuName}" src="//img10.360buyimg.com/n1/jfs/t1897/272/588771888/158370/4498b10/561874e6N4f3d195c.jpg">
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<label class="contentTextPriceStyle">价格￥1.00</label>
+											<label class="contentTextPriceStyle">价格￥$!{promotion.cheapestPromotionPrice}</label>
 										</td>
 									</tr>
 								</table>

@@ -333,6 +333,27 @@ public class PrizeServiceImpl implements IPrizeService {
 			return queryPrizeOrderBOResult;
 		}
 	}
+	
+	
+	public PrizeOrderBO queryPrizeOrderByPinOrderId(String pin, long orderId) {
+		List<PrizeOrderBO> prizeOrderList = null;
+		try{
+			String orderListRedisStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.ORDER_LIST_INFO_PRIFIXE+pin);
+			if(StringUtils.isNotBlank(orderListRedisStr)){
+				prizeOrderList  = JsonUtil.readJson(orderListRedisStr, List.class, PromotionBO.class);
+			}
+			if(CollectionUtils.isNotEmpty(prizeOrderList)){
+				for(PrizeOrderBO prizeOrderBO : prizeOrderList){
+					if(prizeOrderBO.getOrderId()==orderId){
+						return prizeOrderBO;
+					}
+				}
+			}
+		}catch (Exception e) {
+			logger.error("PrizeServiceImpl.queryPrizeOrderByPinOrderId根据用户和订单号查询订单列表时发生异常，入参{pin="+pin+"   orderId="+orderId+"}", e);
+		}
+		return null;
+	}
 
 	public IPrizeOrderDAO getiPrizeOrderDAO() {
 		return iPrizeOrderDAO;
@@ -386,6 +407,5 @@ public class PrizeServiceImpl implements IPrizeService {
 	public void setiOrderIdDAO(IOrderIdDAO iOrderIdDAO) {
 		this.iOrderIdDAO = iOrderIdDAO;
 	}
-
 
 }

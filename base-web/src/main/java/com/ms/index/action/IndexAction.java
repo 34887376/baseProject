@@ -36,7 +36,7 @@ public class IndexAction extends BaseAction{
         	}
         	
     		while(promotionBriefVOList.size()<8){
-    			promotionBriefVOList.add(new PromotionBriefVOInfo());
+    			promotionBriefVOList.add(makeDefalutInfo());
     		}
         	
 	    	Map<String, Object> parmKeyValue = new HashMap<String, Object>();
@@ -46,6 +46,11 @@ public class IndexAction extends BaseAction{
         	logger.error("IndexAction.showIndex方法查询过程中发生异常！！！", e);
         }
         return SUCCESS;
+    }
+    
+    private PromotionBriefVOInfo makeDefalutInfo(){
+    	PromotionBriefVOInfo promotionBriefVOInfo =new PromotionBriefVOInfo();
+    	return promotionBriefVOInfo;
     }
 
 

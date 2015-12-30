@@ -15,7 +15,7 @@
 	</sql>
 	
 	<!-- 根据促销id查询多个促销信息 -->
-	<select id="queryPromotionsByIds" resultClass="java.util.List" parameterClass="java.util.List">
+	<select id="queryPromotionsByIds" resultMap="promotionResult" parameterClass="java.util.List">
 		select
 		<include refid="promotionTable.allFileds" />
 		from promotion where id in

@@ -35,6 +35,14 @@ public interface IPrizeService {
 	List<PrizeOrderBO> queryPrizeOrderListByPin(String pin);
 	
 	/**
+	 * 根据pin和订单号查询订单信息
+	 * @param pin
+	 * @param orderId
+	 * @return
+	 */
+	PrizeOrderBO queryPrizeOrderByPinOrderId(String pin,long orderId);
+	
+	/**
 	 * 根据用户pin和订单号修改订单状态
 	 * @param pin
 	 * @param orderId

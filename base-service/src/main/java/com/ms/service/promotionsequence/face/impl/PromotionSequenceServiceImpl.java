@@ -2,6 +2,7 @@ package com.ms.service.promotionsequence.face.impl;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -62,6 +63,9 @@ public class PromotionSequenceServiceImpl implements IPromotionSequenceService {
 			PromotionSequenceDAO promotionSequenceDAO = PromotionSequenceConvert.convertBOTODAO(promotionSequenceBO);
 			List<PromotionSequenceDAO> promotionSeqDAOList = iPromotionSequenceDAO.queryPromotionSequenceByCondition(promotionSequenceDAO);
 			List<PromotionSequenceBO> promotionSeqBOList = PromotionSequenceConvert.convertDAOTOBOList(promotionSeqDAOList);
+			if(CollectionUtils.isEmpty(promotionSeqBOList)){
+				return null;
+			}
 			PromotionSequenceBO promotionSeqBOFromDB = promotionSeqBOList.get(0);
 			String promotionSeqStr = JsonUtil.toJson(promotionSeqBOFromDB);
 			iPromotionRedis.setValue(RedisKeyPrefixConstant.PROMOTION_SEQUENCE_ID_PRIFIXE+String.valueOf(promotionSequenceId), promotionSeqStr, RedisKeyPrefixConstant.PROMOTION_SEQUENCE_ID_TIME);
@@ -70,6 +74,14 @@ public class PromotionSequenceServiceImpl implements IPromotionSequenceService {
 			logger.error("PromotionSequenceServiceImpl.queryPromotionSequenceById查询促销信息时发生异常，入参{promotionId="+JsonUtil.toJson(promotionSequenceId)+"}", e);
 		}
 		return null;
+	}
+
+	public void setiPromotionSequenceDAO(IPromotionSequenceDAO iPromotionSequenceDAO) {
+		this.iPromotionSequenceDAO = iPromotionSequenceDAO;
+	}
+
+	public void setiPromotionRedis(IPromotionRedis iPromotionRedis) {
+		this.iPromotionRedis = iPromotionRedis;
 	}
 
 }

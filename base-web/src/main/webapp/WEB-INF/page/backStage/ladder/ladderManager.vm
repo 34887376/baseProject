@@ -15,8 +15,7 @@
 </head> 
 <body>
 <div>
-	#parse("/htmlPage/common/header.vm")
-	<h1>促销信息管理后台</h1>
+	<h1>阶梯规则管理后台</h1>
 	<hr style="height:10px;size:5;border:3px;border-top:1px solid #FF0066;"/>
 	<div class="container">
 		<div class="col-md-2 col-sm-offset-1"><label>阶梯规则编号<lable></div><div class="col-md-2"><input type="text" id="queryLadderId" placeholder="阶梯规则编号"></div>
@@ -91,7 +90,6 @@
 </div>
 </div>
 <div style="margin-top:400px;">
-#parse("/htmlPage/common/bottom.html")
 </div>
   	<script src="../../../js/jquery-1.11.3/jquery-1.11.3.min.js?r=20150707"></script>
 	<script src="../../../js/bootstrap-3.3.5/bootstrap.js?r=20150707"></script>

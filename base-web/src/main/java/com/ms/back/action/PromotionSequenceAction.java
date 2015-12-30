@@ -66,7 +66,7 @@ public class PromotionSequenceAction extends BaseAction{
 	private Integer isvaliade;
 	
 	//刷入redis的第一个促销id
-	private Long startPromotionId;
+	private Long startPromotionSequenceId;
 	
 
 	public String queryPromotionSequenceByPageNum(){
@@ -210,7 +210,7 @@ public class PromotionSequenceAction extends BaseAction{
 	public String refreshDateToRedis(){
 		BackPromotionSequenceResult backPromotionSequenceResult = new BackPromotionSequenceResult();
 		try{
-			boolean refreshResult = iBackPromotionSeqSerivce.refreshBackPromotionInfoToRedis(startPromotionId);
+			boolean refreshResult = iBackPromotionSeqSerivce.refreshBackPromotionInfoToRedis(startPromotionSequenceId);
 			if(refreshResult){
 				backPromotionSequenceResult.setSuccess(true);
 				backPromotionSequenceResult.setMsg("刷新成功！！！");
@@ -327,4 +327,13 @@ public class PromotionSequenceAction extends BaseAction{
 	public void setIsvaliade(Integer isvaliade) {
 		this.isvaliade = isvaliade;
 	}
+
+	public Long getStartPromotionSequenceId() {
+		return startPromotionSequenceId;
+	}
+
+	public void setStartPromotionSequenceId(Long startPromotionSequenceId) {
+		this.startPromotionSequenceId = startPromotionSequenceId;
+	}
+
 }

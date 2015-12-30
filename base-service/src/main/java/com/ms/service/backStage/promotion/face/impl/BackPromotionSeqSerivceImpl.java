@@ -60,34 +60,33 @@ public class BackPromotionSeqSerivceImpl implements IBackPromotionSeqSerivce {
 	//查询促销信息
 	private IPromotionService iPromotionService;
 	
-	private static final String startPromotionIndexKey=RedisKeyPrefixConstant.START_PROMOTION_INDEX;
+	private static final String startPromotionIndexKey=RedisKeyPrefixConstant.START_PROMOTION_SEQUENCE_INDEX;
 	private static final String promotionKey=RedisKeyPrefixConstant.PROMOTION_INFO_INDEX;
 	
 	public boolean refreshBackPromotionInfoToRedis(long startPromotionId) {
 
-		iPromotionRedis.setValue(startPromotionIndexKey, String.valueOf(startPromotionId));
-
 		try {
+			iPromotionRedis.setValue(startPromotionIndexKey, String.valueOf(startPromotionId));
 			PromotionSequenceDAO promotionSequenceDAO = new PromotionSequenceDAO();
 			promotionSequenceDAO.setPromotionId(startPromotionId);
-			List<PromotionSequenceDAO> promotionInfo = iPromotionSequenceDAO.queryPromotionSequenceByCondition(promotionSequenceDAO);
+//			List<PromotionSequenceDAO> promotionInfo = iPromotionSequenceDAO.queryPromotionSequenceByCondition(promotionSequenceDAO);
 			//循环查询数据库中的促销信息,直到查不到信息为止
-			while(true){
-					//查不到信息则结束
-					if(promotionInfo == null || promotionInfo.get(0)==null || promotionInfo.get(0).getNextOrder()==null){
-						break;
-					}
-					String promotionId = String.valueOf(promotionInfo.get(0).getPromotionId());
-					String promotionInfoStr = JsonUtil.toJson(promotionInfo.get(0));
-					iPromotionRedis.setValue(promotionKey+promotionId, promotionInfoStr,RedisKeyPrefixConstant.PROMOTION_INFO_INDEX_TIME);
-					iPromotionRedis.setValue(startPromotionIndexKey+startPromotionId,  String.valueOf(promotionId), RedisKeyPrefixConstant.START_PROMOTION_TIME);
-					
-					long nextOrderId = promotionInfo.get(0).getNextOrder();
-					PromotionSequenceDAO nextPromotionSequenceDAO = new PromotionSequenceDAO();
-					nextPromotionSequenceDAO.setId(nextOrderId);
-					promotionInfo = iPromotionSequenceDAO.queryPromotionSequenceByCondition(nextPromotionSequenceDAO);
-					startPromotionId = promotionInfo.get(0).getPromotionId();
-			}
+//			while(true){
+//					//查不到信息则结束
+//					if(promotionInfo == null || promotionInfo.get(0)==null || promotionInfo.get(0).getNextOrder()==null){
+//						break;
+//					}
+//					String promotionId = String.valueOf(promotionInfo.get(0).getPromotionId());
+//					String promotionInfoStr = JsonUtil.toJson(promotionInfo.get(0));
+//					iPromotionRedis.setValue(promotionKey+promotionId, promotionInfoStr,RedisKeyPrefixConstant.PROMOTION_INFO_INDEX_TIME);
+//					iPromotionRedis.setValue(startPromotionIndexKey+startPromotionId,  String.valueOf(promotionId), RedisKeyPrefixConstant.START_PROMOTION_TIME);
+//					
+//					long nextOrderId = promotionInfo.get(0).getNextOrder();
+//					PromotionSequenceDAO nextPromotionSequenceDAO = new PromotionSequenceDAO();
+//					nextPromotionSequenceDAO.setId(nextOrderId);
+//					promotionInfo = iPromotionSequenceDAO.queryPromotionSequenceByCondition(nextPromotionSequenceDAO);
+//					startPromotionId = promotionInfo.get(0).getPromotionId();
+//			}
 			return true;
 		} catch (Exception e) {
 			logger.error("BackPromotionSeqSerivceImpl.refreshBackPromotionInfoToRedis往redis中刷新数据异常！！！", e);

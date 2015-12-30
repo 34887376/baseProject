@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" /> 
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="#ffffff" name="msapplication-TileColor" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <title>靠谱APP</title>
+    <link href="../../../css/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet">
+    <link href="../../../css/ms/orderList/prizeOrderList.css" rel="stylesheet">
+
+</head> 
+<body>
+<div>
+	#parse("/htmlPage/common/header.vm")
+	<div id="indexBodytop" class="orderListBodytopDivStyle">
+		<!--flash
+		<object id="flash_obj" width="300" height="250" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" type="application/x-shockwave-flash">
+			<param value="http://ubmcmm.baidustatic.com/media/v1/0f000DH-9QBJy6hnLq-Jj0.swf" name="movie">
+			<param value="high" name="quality">
+			<param value="always" name="AllowScriptAccess">
+			<param value="opaque" name="wmode">
+			<param value="" name="FlashVars">
+			<embed width="300" height="250" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="always" quality="high" src="http://ubmcmm.baidustatic.com/media/v1/0f000DH-9QBJy6hnLq-Jj0.swf" wmode="opaque">
+		</object>-->
+		<!--img-->
+		<img width="1210" height="80" src="//img10.360buyimg.com/da/jfs/t1963/54/1101337437/88594/b0525f82/5667c50dNec0f2b0a.jpg">
+	</div>
+	<div id="orderListBodyContent" class="orderListBodyContentDivStyle">
+		<table class="contentTableStyle">
+				<tr>
+					<td><label class="orderListContentTitle">我&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;的&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;列&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表</label></td>
+				</tr>
+			#if($prizeOrderVOList)
+				<tr>
+					<td>
+						<table class="orderInfoTableStyle">
+							<tr class="orderInfoTableTitleNameStyle"><td>商品信息</td><td>中奖等级</td><td>订单价格</td><td>收货人信息</td><td>配送信息</td><td>订单状态</td></tr>
+							#foreach($prizeOrder in $prizeOrderVOList)
+								<tr><td colspan=6><label class="orderInfoTitleStyle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单号: $!{prizeOrder.orderId}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下单时间:$!{prizeOrder.createTime}</label></td></tr>
+								<tr>
+									<td>
+										<table class="orderSkuInfoTable">
+											<tr>
+												<td>
+													<img width="100" height="100" alt="$!{prizeOrder.skuName}" src="//img10.360buyimg.com/n1/jfs/t1897/272/588771888/158370/4498b10/561874e6N4f3d195c.jpg">
+												</td>
+												<td>
+													<label class="skuTextNameStyle">$!{prizeOrder.skuName}</label>
+												</td>
+												<td>
+													<label class="skuTextNumStyle"> &times;$!{prizeOrder.skuNum}</label>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td>
+										<label class="prizeLevelStyle">
+											#set($level = ${prizeOrder.prizeType})
+											#if($level==101)
+												 一等奖
+											#elseif($level==102)
+												二等奖
+											#elseif($level==103)
+												三等奖
+											#else
+												未知
+											#end
+												
+										</label>
+									</td>
+									<td>
+										<label class="orderPriceStyle">$!{prizeOrder.promotionPrice}</label>
+									</td>
+									<td>
+										<label class="orderAddressStyle">收货人:$!{prizeOrder.name}</br>手机号:$!{prizeOrder.phone}</br>收货地址:$!{prizeOrder.address}</label>
+									</td>
+									<td>
+										<label class="orderFrightStyle">快递:$!{prizeOrder.frightTrader}</br>单号: $!{prizeOrder.frightOrder}</label>
+									</td>
+									<td>
+										<label class="orderStatusStyle">$!{prizeOrder.status}</label>
+									</td>
+								</tr>
+							#end
+						</table>
+					</td>
+				</tr>
+			#else
+				<tr>
+					<td>
+						<div>
+							最近没有购买订单信息
+						</div>
+
+					</td>
+				</tr>
+			#end
+		</table>
+	</div>
+	
+   	<div id="indexBodyBootom" class="prizeOrderListBodyBootomDivStyle">
+    	#parse("/htmlPage/common/bottom.html")
+    </div>
+</div>
+
+  	<script src="../../../js/jquery-1.11.3/jquery-1.11.3.min.js?r=20150707"></script>
+	<script src="../../../js/bootstrap-3.3.5/bootstrap.js?r=20150707"></script>
+	<script src="../../../js/common/utils.js?r=20150707"></script>
+	<script src="../../../js/ms/orderList/prizeOrderList.js?r=20150707"></script>
+
+</body>
+</html>

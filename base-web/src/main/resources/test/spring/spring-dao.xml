@@ -19,4 +19,6 @@
 	<bean id="iLadderPromotionDAO" class="com.ms.dao.ladderpromotion.face.impl.LadderPromotionDAOImpl"/>
 	<!-- 订单信息 -->
 	<bean id="iPrizeOrderDAO" class="com.ms.dao.prize.order.face.impl.PrizeOrderDAOImpl"/>
+		<!-- 订单号信息 -->
+	<bean id="iOrderIdDAO" class="com.ms.dao.orderid.face.impl.OrderIdDAOImpl"/>
 </beans>

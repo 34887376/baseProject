@@ -24,7 +24,7 @@ public class PrizeOrderVO implements Serializable{
 	private String address;
 	
 	//电话号码
-	private Integer phone;
+	private Long phone;
 	
 	//商品id
 	private Long skuId;
@@ -105,13 +105,6 @@ public class PrizeOrderVO implements Serializable{
 		this.address = address;
 	}
 
-	public Integer getPhone() {
-		return phone;
-	}
-
-	public void setPhone(Integer phone) {
-		this.phone = phone;
-	}
 
 	public Long getSkuId() {
 		return skuId;
@@ -215,5 +208,13 @@ public class PrizeOrderVO implements Serializable{
 
 	public void setSkuName(String skuName) {
 		this.skuName = skuName;
+	}
+
+	public Long getPhone() {
+		return phone;
+	}
+
+	public void setPhone(Long phone) {
+		this.phone = phone;
 	}
 }

@@ -1,0 +1,183 @@
+/*头部flash*/
+.indexBodytopDivStyle{
+	display: block;
+	 position: absolute;
+	 top: 10%;
+	 left: 0%;
+	 width: 100%;
+	 padding: 1px 1px;
+	 border: 1px solid #000000;
+	 background-color: white;
+	 z-index:1002;
+	 overflow: auto;
+	 text-align:center;
+     margin-bottom: 20px;
+}
+
+.contentTableStyle{
+	text-align:center;
+}
+
+.addressTitleStyle{
+	font-weight: bold;
+	text-align:left;
+	line-height: 39px;
+	font-size:15px;
+	font-family:'microsoft yahei';
+	font-style:normal;
+	color: balck;
+	background-color: #f0f0f0;
+	width:100%;
+}
+
+.addressDiv{
+	display:block;
+	position:relative;left:338px;top:73px;
+	text-align:left;
+	margin:10px 5px;
+	width: 1210px;
+	height:100%;
+	background-color: #ffffff;
+	border: 1px solid #000000;
+	margin-bottom: 20px;
+}
+
+.addressTable{
+	width: 100%;
+	
+}
+
+.addressTextNameStyle{
+	width: 280px;
+	line-height: 39px;
+	text-align: right;
+	font-size:13px;
+	font-family:'microsoft yahei';
+	font-style:normal;
+	color: balck;
+	margin-bottom: 25px;
+}
+
+.addressInputTextStyle{
+	line-height: 30px;
+}
+
+.skuInfoDiv{
+	display:block;
+	position:relative;left:338px;top:50px;
+	text-align:left;
+	margin:10px 5px;
+	width: 1210px;
+	height:100%;
+	background-color: #ffffff;
+	border: 1px solid #000000;
+	margin-bottom: 20px;
+}
+
+.skuInfoTableStyle{
+	width: 100%;
+	border: 50px;
+	text-align:center;
+	margin-bottom: 25px;
+}
+
+.skuTableTitleNameStyle{
+	font-weight: bold;
+	font-family: 'Arial,Verdana,"宋体"';
+    font-size: 15px;
+    font-style: normal;
+    line-height: 39px;
+    margin-bottom: 25px;
+	color: balck;
+}
+
+.skuTextIdStyle .skuTextNameStyle .skuTextNumStyle .skuTextNumStyle{
+	
+}
+
+.priceInfoDiv{
+	display:block;
+	position:relative;
+	text-align:right;
+	margin-top:37px;
+	margin-left:343px;
+	margin-bottom: 20px;
+	width: 1212px;
+	height:100%;
+	background-color: #ffffff;
+	border: 1px solid #000000;
+	
+}
+
+.skuInfoTitleStyle{
+	font-weight: bold;
+	text-align:left;
+	line-height: 39px;
+	font-size:15px;
+	font-family:'microsoft yahei';
+	font-style:normal;
+	color: balck;
+	background-color: #f0f0f0;
+	width:100%;
+}
+
+.priceTextStyle{
+	font-family: "宋体";
+    font-size: 15px;
+    font-style: normal;
+	line-height: 39px;
+	margin-right: 70px;
+	color: red;
+}
+
+
+.priceInfoTableStyle{
+	width: 100%;
+	border: 50px;
+	text-align:right;
+	margin-bottom: 3px;
+}
+
+.priceInfoTitleStyle{
+	font-weight: bold;
+	text-align:left;
+	line-height: 39px;
+	font-size:15px;
+	font-family:'microsoft yahei';
+	font-style:normal;
+	color: balck;
+	background-color: #f0f0f0;
+	width:100%;
+}
+
+/*抢购按钮div*/
+.submitbuttonShow{
+	position:relative;left:530px;top:-309px;
+	text-align:left;
+	margin:10px 5px;
+	width: 500px;
+	height:180px;
+}
+
+
+/*抢购按钮样式*/
+.buttonStyle{
+	background-color: #ff0000;
+	line-height: 39px;
+	width: 200px;
+	text-align: center;
+	font-weight: bold;
+	font-size:30px;
+	font-family:'microsoft yahei';
+	font-style:normal;
+	color: #000;
+	text-shadow:1px 1px 1px #333;
+	border-radius: 5px;
+	margin:0 20px 20px 0;
+	
+}
+
+/*底部定位*/
+.prizeOrderBodyBootomDivStyle{
+	display: block;
+}

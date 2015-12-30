@@ -24,7 +24,7 @@ public class PrizeOrderDAO implements Serializable{
 	private String address;
 	
 	//电话号码
-	private Integer phone;
+	private Long phone;
 	
 	//商品id
 	private Long skuId;
@@ -99,13 +99,6 @@ public class PrizeOrderDAO implements Serializable{
 		this.address = address;
 	}
 
-	public Integer getPhone() {
-		return phone;
-	}
-
-	public void setPhone(Integer phone) {
-		this.phone = phone;
-	}
 
 	public Long getSkuId() {
 		return skuId;
@@ -193,6 +186,14 @@ public class PrizeOrderDAO implements Serializable{
 
 	public void setYn(Boolean yn) {
 		this.yn = yn;
+	}
+
+	public Long getPhone() {
+		return phone;
+	}
+
+	public void setPhone(Long phone) {
+		this.phone = phone;
 	}
 	
 	

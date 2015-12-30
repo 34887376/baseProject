@@ -8,17 +8,31 @@
 	<!-- 用户登录 -->
 	<bean id="userLonginService" class="com.ms.service.user.face.impl.UserLonginServiceImpl"/>
 	
-	<!-- 促销查询 -->
-	<bean id="iPromotionService" class="com.ms.service.promotion.face.impl.PromotionServiceImpl"/>
-	
+	<!-- 后台管理start  start start  -->
 	<!-- 促销管理后台 -->
 	<bean id="iBackPromotionService" class="com.ms.service.backStage.promotion.face.impl.BackPromotionServiceImpl"/>
 	<!-- 商品后台管理 -->
-	<bean id="iSkuManagerService" class="com.ms.service.backStage.sku.face.impl.BackSkuServiceImpl"/>
+	<bean id="iBackSkuService" class="com.ms.service.backStage.sku.face.impl.BackSkuServiceImpl"/>
 	<!-- 促销排序后台管理 -->
 	<bean id="iBackPromotionSeqSerivce" class="com.ms.service.backStage.promotion.face.impl.BackPromotionSeqSerivceImpl"/>
 	<!-- 阶梯规则后台管理 -->
 	<bean id="iBackLadderService" class="com.ms.service.backStage.ladder.face.impl.BackLadderServiceImpl"/>
 		<!-- 阶梯促销规则后台管理 -->
 	<bean id="iBackLadderPromotionService" class="com.ms.service.backStage.ladder.face.impl.BackLadderPromotionServiceImpl"/>
+	<!-- 后台管理end  end  end  -->
+	
+	<!-- 前台管理start  start start  -->
+	<!-- 促销查询 -->
+	<bean id="iPromotionService" class="com.ms.service.promotion.face.impl.PromotionServiceImpl"/>
+	<!-- 商品查询 -->
+	<bean id="iSkuService" class="com.ms.service.sku.face.impl.SkuServiceImpl"/>
+	<!-- 阶梯规则查询 -->
+	<bean id="iLadderService" class="com.ms.service.ladder.face.impl.LadderServiceImpl"/>
+	<!-- 阶梯促销信息查询 -->
+	<bean id="iLadderPromotionService" class="com.ms.service.ladderpromotion.face.impl.LadderPromotionServiceImpl"/>
+	<!--促销序列信息-->
+	<bean id="iPromotionSequenceService" class="com.ms.service.promotionsequence.face.impl.PromotionSequenceServiceImpl"/>
+	<!--促销序列管理-->
+	<bean id="iPrizeService" class="com.ms.service.prize.face.impl.PrizeServiceImpl"/>
+	<!-- 前台管理end  end  end  -->
 </beans>

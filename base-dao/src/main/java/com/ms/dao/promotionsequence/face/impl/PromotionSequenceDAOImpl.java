@@ -58,8 +58,7 @@ public class PromotionSequenceDAOImpl extends BaseMysqlDAO implements IPromotion
 //		return false;
 //	}
 
-	public List<PromotionSequenceDAO> queryPromotionSequenceByCondition(
-			PromotionSequenceDAO promotionSequenceDAO) throws Exception {
+	public List<PromotionSequenceDAO> queryPromotionSequenceByCondition(PromotionSequenceDAO promotionSequenceDAO) throws Exception {
 		if(promotionSequenceDAO==null){
 			return new ArrayList<PromotionSequenceDAO>();
 		}

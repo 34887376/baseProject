@@ -39,9 +39,11 @@ public class LadderPromotionServiceImpl implements ILadderPromotionService {
 				return ladderPromotionBOList;
 			}else{
 				ladderPromotionBOList = queryLadderPromotionFromDBById(promotionId);
-				ladderPromotionRedisStr = JsonUtil.toJson(ladderPromotionBOList);
-				iPromotionRedis.setValue(RedisKeyPrefixConstant.LADDER_PROMOTION_PRIFIXE+String.valueOf(promotionId), ladderPromotionRedisStr, RedisKeyPrefixConstant.LADDER_PROMOTION_TIME);
-				return ladderPromotionBOList;
+				if(CollectionUtils.isNotEmpty(ladderPromotionBOList)){
+					ladderPromotionRedisStr = JsonUtil.toJson(ladderPromotionBOList);
+					iPromotionRedis.setValue(RedisKeyPrefixConstant.LADDER_PROMOTION_PRIFIXE+String.valueOf(promotionId), ladderPromotionRedisStr, RedisKeyPrefixConstant.LADDER_PROMOTION_TIME);
+					return ladderPromotionBOList;
+				}
 			}
 		}catch(Exception e){
 			logger.error("LadderPromotionServiceImpl.queryLadderPromotionByPromotionId查询阶梯促销信息过程中发生异常！！！", e);

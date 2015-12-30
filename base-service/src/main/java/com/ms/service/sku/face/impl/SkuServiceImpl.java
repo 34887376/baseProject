@@ -34,8 +34,7 @@ public class SkuServiceImpl implements ISkuService {
 			String skuRedisStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.SKU_PRIFIXE+String.valueOf(skuId));
 			if(StringUtils.isNotBlank(skuRedisStr)){
 				skuBO = JsonUtil.fromJson(skuRedisStr, SkuBO.class);
-			}
-			if(skuBO==null){
+			}else{
 				skuBO = querySkuFromDBById(skuId);
 				skuRedisStr = JsonUtil.toJson(skuBO);
 				iPromotionRedis.setValue(RedisKeyPrefixConstant.SKU_PRIFIXE+String.valueOf(skuId), skuRedisStr, RedisKeyPrefixConstant.SKU_TIME);

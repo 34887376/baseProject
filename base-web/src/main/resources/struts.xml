@@ -64,5 +64,7 @@
 	<include file="struts/struts-index.xml" />
 	<include file="struts/struts-backStage.xml" />
 	<include file="struts/struts-promotion.xml" />
+	<include file="struts/struts-prize.xml" />
+	<include file="struts/struts-orderList.xml" />
 	
 </struts>

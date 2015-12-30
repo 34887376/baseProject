@@ -1,0 +1,120 @@
+/*头部flash*/
+.orderListBodytopDivStyle{
+	 position: absolute;
+	 top: 10%;
+	 left: 0%;
+	 width: 100%;
+	 padding: 1px 1px;
+	 border: 1px solid #000000;
+	 background-color: white;
+	 z-index:1002;
+	 overflow: auto;
+	 text-align:center;
+     margin-bottom: 20px;
+}
+
+.orderListBodyContentDivStyle{
+	position:relative;left: 268px;top:100px;
+	width: 1366px;
+}
+
+.contentTableStyle{
+	text-align:center;
+}
+
+.orderListContentTitle{
+	font-weight: bold;
+	background-color: #f0f0f0;
+	width:100%;
+	font-size: 21px;
+    font-weight: bold;
+    line-height: 56px;
+}
+
+.orderInfoTableStyle{
+	width: 100%;
+	border: 10px;
+	text-align:left;
+	margin-bottom: 10px;
+	border: 1px solid #000000;
+}
+
+.orderInfoTableStyle tr td{
+	border: 1px solid #000000;
+	margin:2px;
+}
+
+.orderInfoTableTitleNameStyle{
+	font-weight: bold;
+	font-family: '"宋体"';
+    font-size: 16px;
+    font-style: normal;
+    line-height: 37px;
+	color: balck;
+	text-align: center;
+}
+
+.orderInfoTitleStyle{
+	font-family: '"宋体"';
+    font-size: 15px;
+    font-style: normal;
+    line-height: 43px;
+	color: balck;
+	background-color: #f0f0f0;
+	margin: 0;
+	width:100%;
+}
+
+.orderSkuInfoTable tr td{
+	border: 0px;
+}
+
+.skuTextNameStyle{
+	font-family: "宋体";
+    font-size: 13px;
+    font-style: normal;
+	line-height: 18px;
+	color: #a0a0a0;
+	width:80%;
+}
+.orderAddressStyle{
+	font-family: "宋体";
+    font-size: 13px;
+    font-style: normal;
+	line-height: 18px;
+	color: #a0a0a0;
+	width:80%;
+}
+.orderStatusStyle,.orderPriceStyle{
+	font-family: "宋体";
+    font-size: 13px;
+    font-style: normal;
+	line-height: 18px;
+	color: #a0a0a0;
+	width: 100px;
+}
+
+.prizeLevelStyle{
+	font-family: "宋体";
+    font-size: 13px;
+    font-style: normal;
+	line-height: 18px;
+	color: #a0a0a0;
+	width: 100px;
+}
+
+.skuTextNumStyle, .orderFrightStyle{
+	font-family: "宋体";
+    font-size: 13px;
+    font-style: normal;
+	line-height: 18px;
+	color: #a0a0a0;
+}
+
+
+/*底部定位*/
+.prizeOrderListBodyBootomDivStyle{
+    margin-top: 80px;
+    position: relative;
+	display: block;
+}

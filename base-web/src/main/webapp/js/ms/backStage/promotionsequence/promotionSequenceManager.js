@@ -357,29 +357,33 @@ function canclePromotionSequence(){
 }
 
 
-function checkImgName(imgName){
-	//正则表达式，校验图片格式
-	var syn=new RegExp("\.(jpg|jpeg|ico|bmp|png)$","i");
-	//var syn=/\.(jpg|jpeg|ico|bmp|png)$/i;  注意这里不是字符串
-	var r = syn.test(imgName);
-	if(imgName == "") return false;
-	if (!syn.test(imgName)){
-		alert("请上传jpg/png/ico/bmp格式的图片！");
-		return false;
+function setStartPromotionSequence(){
+	
+	var startPromotionSequenceId=$("#startPromotionSequenceId").val();
+	
+	if (isNullValue(startPromotionSequenceId)) {
+		$("#tipInfo").text("请输入起始促销序列编号");
+		$("#startPromotionSequenceId").focus();
+		return;
 	}
-	return true;
-}
-var preivew = function(file){
-    try{ 
-    	var imgNames = file.value;
-    	var uid = "#" + file.id;
-
-    	//校验图片格式
-    	if(checkImgName(imgNames)==false){
-    		$(uid).remove();
-    	}
-    	return;
-    }catch(e){ 
-        alert(e); 
-    } 
+	var param = "startPromotionSequenceId="+startPromotionSequenceId+"&r="+(new Date()).getTime();
+	
+	$.ajax({
+		  url: "/backstage/promotionSequence/refreshDateToRedis.action",
+	      type: "POST",
+	      data: param,
+	      dataType: "json",
+	      async:false,
+	      success: function(msg){
+	    	  if(msg.success){
+	    		  window.location.href = "/backstage/promotionSequence/queryPromotionSequenceByPageNum.action?r="+(new Date()).getTime();
+	    	  }else{
+	    		  alert(msg.msg);
+	    		  $("#tipInfo").text(msg.msg);
+	    	  }
+	      },
+	      error:function(msg){
+	    	  alert(msg.msg);
+	      }
+		 });
 }

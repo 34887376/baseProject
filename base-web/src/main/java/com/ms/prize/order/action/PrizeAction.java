@@ -9,6 +9,7 @@ import base.test.base.action.BaseAction;
 import base.test.base.util.JsonUtil;
 
 import com.ms.domain.action.front.result.SubmitPrizeOrderResult;
+import com.ms.domain.action.prize.order.vo.OrderSuccessVO;
 import com.ms.domain.action.prize.order.vo.PrizeOrderVO;
 import com.ms.domain.business.constant.OrderStatusDict;
 import com.ms.domain.convert.PrizeOrderConvert;
@@ -35,7 +36,7 @@ public class PrizeAction extends BaseAction{
 	private String address;
 	
 	//电话号码
-	private Integer phone;
+	private Long phone;
 	
 	//促销id
 	private Long promotionId;
@@ -66,7 +67,7 @@ public class PrizeAction extends BaseAction{
 	}
 	
 	/**
-	 * 领奖进入结算页
+	 * 提交订单
 	 * @return
 	 */
 	public String submitPrizeOrder(){
@@ -81,7 +82,7 @@ public class PrizeAction extends BaseAction{
 			prizeOrderBO.setPromotionId(promotionId);
 			prizeOrderBO.setYn(true);
 			prizeOrderBO.setStatus(OrderStatusDict.NEW);
-			CheckPrizeOrderResult checkResult = iPrizeService.checkPrizeOrder(prizeOrderBO );
+			CheckPrizeOrderResult checkResult = iPrizeService.checkPrizeOrder(prizeOrderBO);
 			if(!checkResult.isSuccess()){
 				submitPrizeOrderResult.setSuccess(false);
 				submitPrizeOrderResult.setMsg(checkResult.getMsg());
@@ -100,9 +101,35 @@ public class PrizeAction extends BaseAction{
         }catch(Exception e){
         	logger.error("PrizeAction.takePrize方法查询过程中发生异常！！！", e);
         }
-		return "takePrize";
+		return "submitPrizeOrder";
 	}
-
+	
+	/**
+	 * 跳转到成功也
+	 * @return
+	 */
+	public String showSuccessOrder(){
+		OrderSuccessVO orderSuccessVO= new OrderSuccessVO();
+		orderSuccessVO.setSuccess(false);
+		try{
+			if(orderId==null || orderId < 1000){
+				orderSuccessVO.setMsg("订单信息错误！！！请核对！！！");
+			}
+			PrizeOrderBO prizeOrderInfo = iPrizeService.queryPrizeOrderByPinOrderId(getPin(), orderId);
+			if(prizeOrderInfo!=null){
+				orderSuccessVO.setOrderId(orderId);
+				orderSuccessVO.setOrderPrice(prizeOrderInfo.getPromotionPrice());
+				orderSuccessVO.setSuccess(true);
+			}
+			Map<String, Object> parmKeyValue = new HashMap<String, Object>();
+			parmKeyValue.put("orderSuccessVO",orderSuccessVO);
+			putParamToVm(parmKeyValue);
+        }catch(Exception e){
+        	logger.error("PrizeAction.showSuccessOrder展示成功订单信息方法查询过程中发生异常！！！", e);
+        }
+		return "showSuccessOrder";
+	}
+	
 	public void setiPrizeService(IPrizeService iPrizeService) {
 		this.iPrizeService = iPrizeService;
 	}
@@ -131,13 +158,6 @@ public class PrizeAction extends BaseAction{
 		this.address = address;
 	}
 
-	public Integer getPhone() {
-		return phone;
-	}
-
-	public void setPhone(Integer phone) {
-		this.phone = phone;
-	}
 
 	public Long getPromotionId() {
 		return promotionId;
@@ -153,6 +173,14 @@ public class PrizeAction extends BaseAction{
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public Long getPhone() {
+		return phone;
+	}
+
+	public void setPhone(Long phone) {
+		this.phone = phone;
 	}
 
 	

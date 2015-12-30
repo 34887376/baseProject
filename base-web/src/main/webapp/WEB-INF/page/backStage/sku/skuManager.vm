@@ -15,7 +15,6 @@
 </head> 
 <body>
 <div>
-	#parse("/htmlPage/common/header.vm")
 	<h1>商品信息管理后台</h1>
 	<hr style="height:10px;size:5;border:3px;border-top:1px solid #FF0066;"/>
 	<div class="container">
@@ -37,7 +36,7 @@
 				#if(${skuInfo.imgUrl})
 					<td>$!{skuInfo.imgUrl}</td>
 				#else
-					<td><input type="file" name="$!{skuInfo.id}" id="upfileId"></td>
+					<td><input type="file" name="$!{skuInfo.id}" id="upfileId$!{skuInfo.id}" onchange="uploadSkuImg(this,$!{skuInfo.id});"></td>
 				#end
 				<td>$!{skuInfo.inprice}</td><td>$!{skuInfo.outprice}</td>
 				#if(${skuInfo.yn})
@@ -87,7 +86,7 @@
 					<input type="radio" name="isvaliade" value="0" />无效
 				</div>
 				<div class="col-md-1"></div>
-				<div class="col-md-2"><label>上传图片:<lable></div><div class="col-md-2"><input type="file" id="upfileId"></div>
+				<div class="col-md-2"><label>上传图片:<lable></div><div class="col-md-2"><input type="file" id="upfileId" ></div>
 			</div>
 			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
 			<div class="row">
@@ -101,12 +100,11 @@
 </div>
 </div>
 <div style="margin-top:400px;">
-#parse("/htmlPage/common/bottom.html")
 </div>
   	<script src="../../../js/jquery-1.11.3/jquery-1.11.3.min.js?r=20150707"></script>
 	<script src="../../../js/bootstrap-3.3.5/bootstrap.js?r=20150707"></script>
 	<script src="../../../js/common/utils.js?r=20150707"></script>
-	<script src="../../../js/ms/backStage/sku/skuManager.js?r=2015120711"></script>
+	<script src="../../../js/ms/backStage/sku/skuManager.js?r=2015123011"></script>
 
 </body>
 </html>

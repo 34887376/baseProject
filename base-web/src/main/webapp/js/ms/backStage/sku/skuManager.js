@@ -148,6 +148,7 @@ function updateSku(){
 	var skuAdverst=$("#skuAdverst").val();
 	var inprice=$("#inprice").val();
 	var outprice=$("#outprice").val();
+	var upfileId=$("#upfileId").val();
 	var isvaliade=$("input[name='isvaliade']:checked").val();
 
 	if (isNullValue(skuId)) {
@@ -199,25 +200,42 @@ function updateSku(){
 		return;
 	}
 	
+	//创建FormData对象
+	var data = new FormData();
+	//为FormData对象添加数据
+	var fileElementId="upfileId";
+	$.each($('#'+fileElementId)[0].files, function(i, file) {
+		data.append('upfileId', file);
+	});
+	data.append('skuId',skuId);
+	data.append('skuNum',skuNum);
+	data.append('skuName',skuName);
+	data.append('skuAdverst',skuAdverst);
+	data.append('inprice',inprice);
+	data.append('outprice',outprice);
+	data.append('isvaliade',isvaliade);
+	data.append('r',(new Date()).getTime());
 
 	
 	var param = "skuId="+skuId+"&skuNum="+skuNum+"&skuName="+skuName+"&skuAdverst="+skuAdverst+"&inprice="+inprice+"&outprice="+outprice+"&isvaliade="+isvaliade+"&r="+(new Date()).getTime();
 	$.ajax({
 		  url: "/backstage/sku/updateSkus.action",
-	      type: "POST",
-	      data: param,
+		  type: "POST",
+	      data: data,
 	      dataType: "json",
 	      async:false,
+	      contentType: false,    //不可缺
+	      processData: false,    //不可缺
 	      success: function(msg){
 	    	  if(msg.success){
 	    		  window.location.href = "/backstage/sku/querySkus.action?r="+(new Date()).getTime();
 	    	  }else{
 	    		  $("#tipInfo").text(msg.msg);
 	    	  }
-	    	  alert("sss"+msg);
+	    	  alert(msg.msg);
 	      },
 	      error:function(msg){
-	    	  alert(msg);
+	    	  alert(msg.msg);
 	      }
 		 });
 }
@@ -283,25 +301,41 @@ function submitSku(){
 		return;
 	}
 	
+	//创建FormData对象
+	var data = new FormData();
+	//为FormData对象添加数据
+	var fileElementId="upfileId";
+	$.each($('#'+fileElementId)[0].files, function(i, file) {
+		data.append('upfileId', file);
+	});
+	data.append('skuId',skuId);
+	data.append('skuNum',skuNum);
+	data.append('skuName',skuName);
+	data.append('skuAdverst',skuAdverst);
+	data.append('inprice',inprice);
+	data.append('outprice',outprice);
+	data.append('isvaliade',isvaliade);
 
 	
 	var param = "skuId="+skuId+"&skuNum="+skuNum+"&skuName="+skuName+"&skuAdverst="+skuAdverst+"&inprice="+inprice+"&outprice="+outprice+"&isvaliade="+isvaliade+"&r="+(new Date()).getTime();
 	$.ajax({
-		  url: "/backstage/sku/addSkus.action",
+		  url: "/backstage/sku/addSkus.action?r="+(new Date()).getTime(),
 	      type: "POST",
-	      data: param,
+	      data: data,
 	      dataType: "json",
 	      async:false,
+			contentType: false,    //不可缺
+			processData: false,    //不可缺
 	      success: function(msg){
 	    	  if(msg.success){
 	    		  window.location.href = "/backstage/sku/querySkus.action?r="+(new Date()).getTime();
 	    	  }else{
 	    		  $("#tipInfo").text(msg.msg);
 	    	  }
-	    	  alert("sss"+msg);
+	    	  alert(msg.msg);
 	      },
 	      error:function(msg){
-	    	  alert(msg);
+	    	  alert(msg.msg);
 	      }
 		 });
 	
@@ -341,3 +375,30 @@ var preivew = function(file){
         alert(e); 
     } 
 }
+
+function uploadSkuImg(obj,skuId){
+	//创建FormData对象
+	var data = new FormData();
+	//为FormData对象添加数据
+	var fileElementId="upfileId"+skuId;
+	$.each($('#'+fileElementId)[0].files, function(i, file) {
+		data.append('upfileId', file);
+		data.append('skuId',skuId);
+	});
+	$.ajax({
+		url:'/backstage/sku/updateSkus.action',
+		type:'POST',
+		data:data,
+		cache: false,
+		contentType: false,    //不可缺
+		processData: false,    //不可缺
+		success:function(result){
+//			data = $(data).html();
+//			if($("#feedback").children('img').length == 0) $("#feedback").append(data.replace(/&lt;/g,'<').replace(/&gt;/g,'>'));
+//			else $("#feedback").children('img').eq(0).before(data.replace(/&lt;/g,'<').replace(/&gt;/g,'>'));
+		}
+	});
+}
+
+
+

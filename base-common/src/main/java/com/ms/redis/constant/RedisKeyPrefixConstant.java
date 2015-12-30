@@ -3,7 +3,7 @@ package com.ms.redis.constant;
 public class RedisKeyPrefixConstant {
 	
 	//第一个开始促销的rediskey前缀
-	public static final String START_PROMOTION_INDEX="startPromotionIndexKey"; 
+	public static final String START_PROMOTION_SEQUENCE_INDEX="startPromotionSequenceIndexKey"; 
 	
 	//第一个开始促销的rediskey有效时间(单位为秒)
 	public static final int START_PROMOTION_TIME=60 * 30;

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 import com.ms.action.constant.PageNumConstant;
 import com.ms.domain.action.backstage.BackSkuResult;
@@ -16,6 +17,7 @@ import com.ms.domain.sku.bo.SkuBO;
 import com.ms.service.backStage.sku.face.IBackSkuService;
 
 import base.test.base.action.BaseAction;
+import base.test.base.util.ImageUtil;
 import base.test.base.util.JsonUtil;
 
 public class SkuManagerAction extends BaseAction{
@@ -40,6 +42,8 @@ public class SkuManagerAction extends BaseAction{
 	private Integer isvaliade;
 	
 	private File upfileId;
+	
+	private String upfileIdFileName;
 	
 	private IBackSkuService iBackSkuService;
 	
@@ -94,7 +98,10 @@ public class SkuManagerAction extends BaseAction{
 			skuBO.setNum(skuNum);
 			skuBO.setOutprice(new BigDecimal(outprice));
 			skuBO.setYn(isvaliade==1? true:false);
-			
+			String amiPath = ServletActionContext.getRequest().getRealPath("/uploadImage");
+//			System.out.println(amiPath);
+			String imgPath = ImageUtil.saveFile(upfileId, upfileIdFileName,amiPath);
+			skuBO.setImgUrl(imgPath);
 			boolean addResult = iBackSkuService.addSku(skuBO);
 			if(addResult){
 				BackSkuResult result= new BackSkuResult();
@@ -110,6 +117,10 @@ public class SkuManagerAction extends BaseAction{
 				return "addSuccess";
 			}
 		}catch(Exception e){
+			BackSkuResult result= new BackSkuResult();
+			result.setSuccess(false);
+			result.setMsg("添加异常！！！");
+			print(JsonUtil.toJson(result));
 			logger.error("SkuManagerAction.addSkus添加商品信息异常！！！上下文参数={userName="+skuAdverst+"}", e);
 			return EXCEPTION;
 		}
@@ -126,7 +137,9 @@ public class SkuManagerAction extends BaseAction{
 			skuBO.setNum(skuNum);
 			skuBO.setOutprice(new BigDecimal(outprice));
 			skuBO.setYn(isvaliade==1? true:false);
-			
+			String amiPath = ServletActionContext.getRequest().getRealPath("/uploadImage");
+			String imgPath = ImageUtil.saveFile(upfileId, upfileIdFileName,amiPath);
+			skuBO.setImgUrl(imgPath);
 			boolean upadateResult = iBackSkuService.updateSkuInfo(skuBO);
 			if(upadateResult){
 				BackSkuResult result= new BackSkuResult();
@@ -258,6 +271,14 @@ public class SkuManagerAction extends BaseAction{
 
 	public void setiBackSkuService(IBackSkuService iBackSkuService) {
 		this.iBackSkuService = iBackSkuService;
+	}
+
+	public String getUpfileIdFileName() {
+		return upfileIdFileName;
+	}
+
+	public void setUpfileIdFileName(String upfileIdFileName) {
+		this.upfileIdFileName = upfileIdFileName;
 	}
 
 }
