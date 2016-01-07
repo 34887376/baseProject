@@ -53,5 +53,10 @@ public interface IBackSkuService {
 	 * @return
 	 */
 	List<SkuBO> querySkuListByPageNum(int page,int pageSize);
+	
+	/**
+	 * 加载最新的商品信息到redis中
+	 */
+	void refreshSkuToRedis();
 
 }

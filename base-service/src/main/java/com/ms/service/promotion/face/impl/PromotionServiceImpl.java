@@ -82,9 +82,9 @@ public class PromotionServiceImpl implements IPromotionService {
 	private static final int MAX_LOTTERY_TIMES =3;
 
 	public PromotionBO queryPromotionById(Long promotionId) {
-		PromotionBO promotionBO =new PromotionBO();
+		PromotionBO promotionBO =null;
 		try {
-			String promotionRedisStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.LADDER_PRIFIXE+String.valueOf(promotionId));
+			String promotionRedisStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.PROMOTION_PREFIXE+String.valueOf(promotionId));
 			if(StringUtils.isNotBlank(promotionRedisStr)){
 				promotionBO = JsonUtil.fromJson(promotionRedisStr, PromotionBO.class);
 			}
@@ -472,6 +472,9 @@ public class PromotionServiceImpl implements IPromotionService {
 				
 				//2. 查询商品信息
 				SkuBO skuBO = iSkuService.querySkuById(promotionBO.getSkuId());
+				if(skuBO.getOutprice()==null || skuBO.getName()==null){
+					continue;
+				}
 				promotionBriefBOInfo.setAdvert(skuBO.getAdverst());
 				promotionBriefBOInfo.setSkuName(skuBO.getName());
 				promotionBriefBOInfo.setSkuImgUrl(skuBO.getImgUrl());
@@ -494,6 +497,14 @@ public class PromotionServiceImpl implements IPromotionService {
 				}
 				BigDecimal maxDiscount= new BigDecimal("-1");
 				for(LadderBO ladderBO : ladderBOList){
+					//校验出货价格是否合规
+					if(skuBO.getOutprice()==null){
+						continue;
+					}
+					if(skuBO.getOutprice()!=null && skuBO.getOutprice().compareTo(BigDecimal.ZERO) <=0){
+						continue;
+					}
+					//比较折扣率
 					if(maxDiscount.compareTo(ladderBO.getPriceDiscount()) >= 0){
 						continue;
 					}
@@ -517,7 +528,7 @@ public class PromotionServiceImpl implements IPromotionService {
 			PromotionSequenceBO promotionSequenceBO = iPromotionSequenceService.queryPromotionSequenceByPromotionId(promotionId);
 			if(promotionSequenceBO!=null){
 				if(promotionSequenceBO.getStatus()!=PromotionStatusConstant.START_PROMOTION){
-					return -201;
+					return DrawLotteryResutlDict.UN_START;
 				}
 			}
 			
@@ -526,9 +537,10 @@ public class PromotionServiceImpl implements IPromotionService {
 			String lotteryNum = iPromotionRedis.getValue(lotteryTimesRedisKey);
 			if(StringUtils.isEmpty(lotteryNum)){
 				iPromotionRedis.setValue(lotteryTimesRedisKey, "1", RedisKeyPrefixConstant.USER_LOTTERY_NUM_TIME);
+				lotteryNum="1";
 			}else{
-				if(Integer.valueOf(lotteryNum) > MAX_LOTTERY_TIMES){
-					return -102;
+				if(Integer.valueOf(lotteryNum) >= MAX_LOTTERY_TIMES){
+					return DrawLotteryResutlDict.END;
 				}
 			}
 			int lotteryOldNum = Integer.parseInt(lotteryNum);
@@ -565,7 +577,7 @@ public class PromotionServiceImpl implements IPromotionService {
 			return drawLottery(promotionId,pin,uuid,clientIp,lotteryLevelRedisKey,lotteryTimesRedisKey,lotteryOldNum);
 		}catch(Exception e){
 			logger.error("PromotionServiceImpl.drawLottery抽奖时发生异常，入参{pin="+JsonUtil.toJson(pin)+" ,  promotionId="+promotionId+" }", e);
-			return -401;
+			return DrawLotteryResutlDict.SYS_EXCEPTION;
 		}
 	}
 	
@@ -577,7 +589,7 @@ public class PromotionServiceImpl implements IPromotionService {
 		//查询中奖的概率
 		List<LadderPromotionBO> ladderPromotionList = iLadderPromotionService.queryLadderPromotionByPromotionId(promotionId);
 		if(CollectionUtils.isEmpty(ladderPromotionList)){
-			return -401;
+			return DrawLotteryResutlDict.SYS_EXCEPTION;
 		}
 		
 		List<Long> ladderIdList= new ArrayList<Long>();
@@ -588,9 +600,10 @@ public class PromotionServiceImpl implements IPromotionService {
 		}
 		List<LadderBO> ladderList = iLadderService.queryLadderByIds(ladderIdList);
 		if(CollectionUtils.isEmpty(ladderList)){
-			return -401;
+			return DrawLotteryResutlDict.SYS_EXCEPTION;
 		}
 		
+		//抽奖的基数,中奖概率,总奖数库存map
 		Map<Integer, Long> baseNumMap = new HashMap<Integer, Long>();
 		Map<Integer, Long> hitNumMap = new HashMap<Integer, Long>();
 		Map<Integer, Integer> prizeNumMap = new HashMap<Integer, Integer>();
@@ -610,17 +623,17 @@ public class PromotionServiceImpl implements IPromotionService {
 		if(checkIsHit(hashResult, DrawLotteryResutlDict.HIT_FIRST_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
 			//记录用户的抽奖结果
 			iPromotionRedis.setValue(lotteryLevelRedisKey,"101",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
-			return 101;
+			return DrawLotteryResutlDict.HIT_FIRST_PRIZE;
 		}else if(checkIsHit(hashResult, DrawLotteryResutlDict.HIT_SECONDE_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
 			iPromotionRedis.setValue(lotteryLevelRedisKey,"102",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
-			return 102;
+			return DrawLotteryResutlDict.HIT_SECONDE_PRIZE;
 		}else if(checkIsHit(hashResult, DrawLotteryResutlDict.HIT_THIRD_PRIZE, promotionId, baseNumMap, hitNumMap, prizeNumMap)){
 			iPromotionRedis.setValue(lotteryLevelRedisKey,"103",RedisKeyPrefixConstant.USER_LOTTERY_LEVEL_TIME);
-			return 103;
+			return DrawLotteryResutlDict.HIT_THIRD_PRIZE;
 		}
 		//记录用户的有效抽奖次数
 		iPromotionRedis.setValue(lotteryTimesRedisKey, String.valueOf(++lotteryOldNum), RedisKeyPrefixConstant.USER_LOTTERY_NUM_TIME);
-		return -101;
+		return DrawLotteryResutlDict.UN_HIT_PRIZE;
 	}
 	
 	/**
@@ -638,6 +651,17 @@ public class PromotionServiceImpl implements IPromotionService {
 		int prizeTotalHitNum = -1;
 		String redisKey=null;
 		
+		//检查数据内容是否合法
+		if(prizeNumMap.get(prizType)==null || hitNumMap.get(prizType)==null ||baseNumMap.get(prizType)==null){
+			return false;
+		}
+		
+		//检查中奖概率
+		if(hitNumMap.get(prizType) <=0){
+			return false;
+		}
+		
+		//拼接rediskey
 		if(prizType==DrawLotteryResutlDict.HIT_FIRST_PRIZE){
 			redisKey = "firstPrizHitNum"+promotionId+DrawLotteryResutlDict.HIT_FIRST_PRIZE;
 		}else if(prizType==DrawLotteryResutlDict.HIT_SECONDE_PRIZE){
@@ -645,18 +669,15 @@ public class PromotionServiceImpl implements IPromotionService {
 		}else if(prizType==DrawLotteryResutlDict.HIT_THIRD_PRIZE){
 			redisKey = "thirdPrizHitNum"+promotionId+DrawLotteryResutlDict.HIT_THIRD_PRIZE;
 		}
+		
+		//核查抽奖总数量的剩余个数
 		String prizeTotalHitNumStr = iPromotionRedis.getValue(redisKey);
 		if(StringUtils.isNotBlank(prizeTotalHitNumStr)){
 			prizeTotalHitNum = Integer.parseInt(prizeTotalHitNumStr);
 		}
 		
 		//检查中奖的总数量
-		if(prizeNumMap.get(prizType) < prizeTotalHitNum){
-			return false;
-		}
-		
-		//检查中奖概率
-		if(hitNumMap.get(prizType) >0){
+		if(prizeTotalHitNum >= prizeNumMap.get(prizType)){
 			return false;
 		}
 		

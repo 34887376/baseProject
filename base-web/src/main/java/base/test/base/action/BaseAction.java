@@ -75,7 +75,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
     public String getPin() {
         String Pin = (String) request.getAttribute(LoginParamConstant.getPinContextKey());
         System.out.println(Pin);
-        return Pin;
+//        return Pin;
+        return "testforjd2";
     }
 
     /**

@@ -6,10 +6,14 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import base.test.base.util.JsonUtil;
+
 import com.ms.dao.ladder.face.ILadderDAO;
+import com.ms.dao.promotion.redis.IPromotionRedis;
 import com.ms.domain.convert.LadderConvert;
 import com.ms.domain.ladder.bo.LadderBO;
 import com.ms.domain.ladder.dao.LadderDAO;
+import com.ms.redis.constant.RedisKeyPrefixConstant;
 import com.ms.service.backStage.ladder.face.IBackLadderService;
 
 public class BackLadderServiceImpl implements IBackLadderService {
@@ -17,6 +21,9 @@ public class BackLadderServiceImpl implements IBackLadderService {
 	private Logger logger = Logger.getLogger(this.getClass());
 	
 	private ILadderDAO iLadderDAO;
+	
+	//操作redis的方法
+	private IPromotionRedis iPromotionRedis;
 	
 	public List<LadderBO> queryLadderByPageNum(int page, int pageSize) {
 		List<LadderBO> ladderBOList = new ArrayList<LadderBO>();
@@ -82,8 +89,32 @@ public class BackLadderServiceImpl implements IBackLadderService {
 		return false;
 	}
 
+	public void refreshLadderToRedis(){
+		try{
+			LadderBO ladderDAO = new LadderBO();
+			ladderDAO.setYn(true);
+			//然后查询数据库
+			List<LadderBO> ladderBOFromDBList = queryLadderByCondition(ladderDAO );
+			if(CollectionUtils.isEmpty(ladderBOFromDBList)){
+				return;
+			}
+			for(LadderBO ladderBOFromDB : ladderBOFromDBList){
+				if(ladderBOFromDB!=null){
+					String ladderStrFromDB = JsonUtil.toJson(ladderBOFromDB);
+					iPromotionRedis.setValue(RedisKeyPrefixConstant.LADDER_PRIFIXE+String.valueOf(ladderBOFromDB.getId()), ladderStrFromDB, RedisKeyPrefixConstant.LADDER_TIME);
+				}
+			}
+		}catch(Exception e){
+			logger.error("BackLadderServiceImpl.refreshLadderToRedis往redis中刷新数据的过程中发生异常！！！", e);
+		}
+	}
+	
 	public void setiLadderDAO(ILadderDAO iLadderDAO) {
 		this.iLadderDAO = iLadderDAO;
+	}
+
+	public void setiPromotionRedis(IPromotionRedis iPromotionRedis) {
+		this.iPromotionRedis = iPromotionRedis;
 	}
 
 }

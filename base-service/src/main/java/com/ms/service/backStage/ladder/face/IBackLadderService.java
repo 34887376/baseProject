@@ -42,5 +42,10 @@ public interface IBackLadderService {
 	 */
 	public boolean addLadder(LadderBO ladderBO);
 	
+	/**
+	 * 刷新阶梯规则到缓存
+	 */
+	void refreshLadderToRedis();
+	
 	
 }

@@ -7,9 +7,9 @@ import com.ms.domain.promotionsequence.bo.PromotionSequenceBO;
 public interface IBackPromotionSeqSerivce {
 	
 	/**
-	 * 后台刷新促销信息到redis中
+	 * 后台刷新起始促销id到redis中
 	 */
-	boolean refreshBackPromotionInfoToRedis(long startPromotionId);
+	boolean refreshStartPromotionIdToRedis(long startPromotionId);
 	
 	
 	/**
@@ -52,4 +52,9 @@ public interface IBackPromotionSeqSerivce {
 	 * @return
 	 */
 	boolean updatePromotionSequence(PromotionSequenceBO promotionSequenceBO);
+	
+	/**
+	 * 刷新促销序列信息到redis中
+	 */
+	void refreshPromotionSequenceToRedis();
 }

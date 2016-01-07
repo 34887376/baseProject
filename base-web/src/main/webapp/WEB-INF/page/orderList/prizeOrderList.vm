@@ -83,7 +83,7 @@
 										<label class="orderFrightStyle">快递:$!{prizeOrder.frightTrader}</br>单号: $!{prizeOrder.frightOrder}</label>
 									</td>
 									<td>
-										<label class="orderStatusStyle">$!{prizeOrder.status}</label>
+										<label class="orderStatusStyle">$!{prizeOrder.statusStr}</label>
 									</td>
 								</tr>
 							#end

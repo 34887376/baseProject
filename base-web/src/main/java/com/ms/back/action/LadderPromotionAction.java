@@ -23,6 +23,7 @@ public class LadderPromotionAction extends BaseAction{
 	
 	private IBackLadderPromotionService iBackLadderPromotionService;
 	
+	
 	/**
 	 * 主键id
 	 */

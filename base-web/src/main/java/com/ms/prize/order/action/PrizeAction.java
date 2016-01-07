@@ -1,5 +1,6 @@
 package com.ms.prize.order.action;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public class PrizeAction extends BaseAction{
 	
 	private IPrizeService iPrizeService;
 	
+	
 	//订单号
 	private Long orderId;
 
@@ -41,6 +43,12 @@ public class PrizeAction extends BaseAction{
 	//促销id
 	private Long promotionId;
 	
+	//商品id
+	private Long skuId;
+	
+	//订单价格
+	private BigDecimal orderPrice;
+	
 	//订单状态
 	private Integer status;
 	
@@ -50,9 +58,13 @@ public class PrizeAction extends BaseAction{
 	 */
 	public String takePrize(){
 		try{
+			Map<String, Object> parmKeyValue = new HashMap<String, Object>();
+			if(promotionId==null|| promotionId<10000){
+				parmKeyValue.put("failMsg","请自觉按照规则进行抽奖！！！");
+			}
 			QueryPrizeOrderBOResult prizeInfo = iPrizeService.queryTakePrizeDetailInfo(getPin(), promotionId);
 			PrizeOrderVO prizeOrderVO = new PrizeOrderVO();
-			Map<String, Object> parmKeyValue = new HashMap<String, Object>();
+			
 			if(prizeInfo.isSuccess()){
 				prizeOrderVO  = PrizeOrderConvert.convertBOTOVO(prizeInfo.getPrizeOrderBO());
 				parmKeyValue.put("prizeOrderVO",prizeOrderVO);
@@ -72,6 +84,7 @@ public class PrizeAction extends BaseAction{
 	 */
 	public String submitPrizeOrder(){
 		SubmitPrizeOrderResult submitPrizeOrderResult = new SubmitPrizeOrderResult();
+		submitPrizeOrderResult.setMsg("提交过程中发生异常，请稍后重试！！！");
 		try{
 //			PrizeOrderVO prizeOrderVO = new PrizeOrderVO();
 			PrizeOrderBO prizeOrderBO = new PrizeOrderBO();
@@ -80,6 +93,10 @@ public class PrizeAction extends BaseAction{
 			prizeOrderBO.setPhone(phone);
 			prizeOrderBO.setPin(getPin());
 			prizeOrderBO.setPromotionId(promotionId);
+			prizeOrderBO.setSkuId(skuId);
+			prizeOrderBO.setSkuNum(1);
+			prizeOrderBO.setPromotionPrice(orderPrice);
+			prizeOrderBO.setFrightPrice(new BigDecimal("8.00"));
 			prizeOrderBO.setYn(true);
 			prizeOrderBO.setStatus(OrderStatusDict.NEW);
 			CheckPrizeOrderResult checkResult = iPrizeService.checkPrizeOrder(prizeOrderBO);
@@ -181,6 +198,22 @@ public class PrizeAction extends BaseAction{
 
 	public void setPhone(Long phone) {
 		this.phone = phone;
+	}
+
+	public BigDecimal getOrderPrice() {
+		return orderPrice;
+	}
+
+	public void setOrderPrice(BigDecimal orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+
+	public Long getSkuId() {
+		return skuId;
+	}
+
+	public void setSkuId(Long skuId) {
+		this.skuId = skuId;
 	}
 
 	

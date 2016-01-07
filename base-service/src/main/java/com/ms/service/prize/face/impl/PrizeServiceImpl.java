@@ -2,18 +2,20 @@ package com.ms.service.prize.face.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import base.test.base.util.DateUtils;
 import base.test.base.util.JsonUtil;
 
 import com.ms.dao.orderid.face.IOrderIdDAO;
 import com.ms.dao.prize.order.face.IPrizeOrderDAO;
 import com.ms.dao.promotion.redis.IPromotionRedis;
-import com.ms.domain.action.prize.order.vo.PrizeOrderVO;
 import com.ms.domain.business.constant.OrderStatusDict;
 import com.ms.domain.convert.PrizeOrderConvert;
 import com.ms.domain.ladder.bo.LadderBO;
@@ -55,6 +57,9 @@ public class PrizeServiceImpl implements IPrizeService {
 	
 	//阶梯规则信息service
 	private ILadderService iLadderService;
+	
+	//订单有效期时间
+	private Integer validateHour;
 
 	public CheckPrizeOrderResult checkPrizeOrder(PrizeOrderBO prizeOrderBO) {
 		CheckPrizeOrderResult checkPrizeOrderResult = new CheckPrizeOrderResult();
@@ -81,13 +86,14 @@ public class PrizeServiceImpl implements IPrizeService {
 				checkPrizeOrderResult.setMsg("中奖信息错误，请核对中奖信息！！！");
 				return checkPrizeOrderResult;
 			}
+			prizeOrderBO.setPrizeType(Integer.valueOf(lotteryLevel));
 			
 			PromotionBO promotionInfo = iPromotionService.queryPromotionById(promotionId);
 			if(promotionInfo.getSkuId() != orderSkuId){
 				checkPrizeOrderResult.setMsg("商品信息错误！！！");
 				return checkPrizeOrderResult;
 			}
-			if(!checkPrice(promotionId, orderSkuId, orderPrice, Integer.valueOf(lotteryLevel))){
+			if(!checkPrice(promotionId, promotionInfo.getSkuId(), orderPrice, Integer.valueOf(lotteryLevel))){
 				checkPrizeOrderResult.setMsg("价格信息错误，请重刷新页面重新提交！！！");
 				return checkPrizeOrderResult;
 			}
@@ -96,6 +102,7 @@ public class PrizeServiceImpl implements IPrizeService {
 			return checkPrizeOrderResult;
 		}catch(Exception e){
 			logger.error("PrizeServiceImpl.checkPrizeOrder检查订单信息合法性时发生异常，入参{prizeOrderBO="+JsonUtil.toJson(prizeOrderBO)+"}", e);
+			checkPrizeOrderResult.setMsg("系统去登月球啦，还在路上飞，请稍后再试下！！！");
 			return checkPrizeOrderResult;
 		}
 		
@@ -111,6 +118,9 @@ public class PrizeServiceImpl implements IPrizeService {
 	 */
 	private boolean checkPrice(long promotionId, long skuId, BigDecimal orderPrice, int lotteryLevel){
 		try{
+			if(orderPrice==null){
+				return false;
+			}
 			//查询基本价格
 			SkuBO skuInfo = iSkuService.querySkuById(skuId);
 			//查询折扣率
@@ -155,6 +165,7 @@ public class PrizeServiceImpl implements IPrizeService {
 			}
 			prizeOrderDAO.setOrderId(orderId);
 			prizeOrderDAO.setStatus(OrderStatusDict.NEW);
+			prizeOrderDAO.setInvalidTime(DateUtils.addTime(new Date(), Calendar.HOUR, validateHour));
 			prizeOrderDAO.setYn(true);
 			long id = iPrizeOrderDAO.addPrizeOrder(prizeOrderDAO);
 			if(id < 0){
@@ -162,7 +173,28 @@ public class PrizeServiceImpl implements IPrizeService {
 			}
 			String submitOrderRecordRedisKey = RedisKeyPrefixConstant.ORDER_SUBMIT_RECORD_PRIFIXE+prizeOrderBO.getPin()+prizeOrderBO.getPromotionId();
 			iPromotionRedis.setValue(submitOrderRecordRedisKey, "1", RedisKeyPrefixConstant.ORDER_SUBMIT_RECORD_TIME);
-			return id;
+			/**
+			 * 提交成功后将订单信息写入缓存
+			 */
+			List<PrizeOrderBO> orderListFromRedis = queryPrizeOrderListByPin(prizeOrderBO.getPin());
+			boolean hasRecordInRedis = false;
+			if(CollectionUtils.isNotEmpty(orderListFromRedis)){
+				for(PrizeOrderBO prizeOrderBOFromRedis : orderListFromRedis){
+					if(prizeOrderBOFromRedis.getOrderId().compareTo(prizeOrderBO.getOrderId())==0){
+						hasRecordInRedis= true;
+						break;
+					}
+				}
+			}
+			if(!hasRecordInRedis){
+				prizeOrderBO.setOrderId(orderId);
+				prizeOrderBO.setStatus(OrderStatusDict.NEW);
+				prizeOrderBO.setYn(true);
+				prizeOrderBO.setId(id);
+				prizeOrderBO.setCreateTime(new Date());
+				orderListFromRedis.add(prizeOrderBO);
+			}
+			return orderId;
 		} catch (Exception e) {
 			logger.error("PrizeServiceImpl.checkPrizeOrder添加订单信息时发生异常，入参{prizeOrderBO="+JsonUtil.toJson(prizeOrderBO)+"}", e);
 		}
@@ -174,7 +206,7 @@ public class PrizeServiceImpl implements IPrizeService {
 		try{
 			String orderListRedisStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.ORDER_LIST_INFO_PRIFIXE+pin);
 			if(StringUtils.isNotBlank(orderListRedisStr)){
-				prizeOrderList = JsonUtil.readJson(orderListRedisStr, List.class, PromotionBO.class);
+				prizeOrderList = JsonUtil.readJson(orderListRedisStr, List.class, PrizeOrderBO.class);
 			}
 			if(CollectionUtils.isEmpty(prizeOrderList)){
 				PrizeOrderDAO prizeOrderDAO = new PrizeOrderDAO();
@@ -210,7 +242,7 @@ public class PrizeServiceImpl implements IPrizeService {
 				List<PrizeOrderBO> prizeOrderList = new ArrayList<PrizeOrderBO>();
 				String orderListRedisStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.ORDER_LIST_INFO_PRIFIXE+pin);
 				if(StringUtils.isNotBlank(orderListRedisStr)){
-					prizeOrderList = JsonUtil.readJson(orderListRedisStr, List.class, PromotionBO.class);
+					prizeOrderList = JsonUtil.readJson(orderListRedisStr, List.class, PrizeOrderBO.class);
 					if(CollectionUtils.isNotEmpty(prizeOrderList)){
 						for(PrizeOrderBO prizeOrderBO : prizeOrderList){
 							if(prizeOrderBO.getOrderId() == orderId){
@@ -244,11 +276,16 @@ public class PrizeServiceImpl implements IPrizeService {
 				List<PrizeOrderBO> prizeOrderList = new ArrayList<PrizeOrderBO>();
 				String orderListRedisStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.ORDER_LIST_INFO_PRIFIXE+prizeOrderBO.getPin());
 				if(StringUtils.isNotBlank(orderListRedisStr)){
-					prizeOrderList = JsonUtil.readJson(orderListRedisStr, List.class, PromotionBO.class);
+					prizeOrderList = JsonUtil.readJson(orderListRedisStr, List.class, PrizeOrderBO.class);
 					if(CollectionUtils.isNotEmpty(prizeOrderList)){
 						for(PrizeOrderBO prizeOrderBOFromRedis : prizeOrderList){
-							if(prizeOrderBOFromRedis.getOrderId() == prizeOrderBO.getOrderId()){
-								prizeOrderBOFromRedis = prizeOrderBO;
+							if(prizeOrderBOFromRedis.getOrderId().compareTo(prizeOrderBO.getOrderId())==0){
+								prizeOrderBOFromRedis.setFrightOrder(prizeOrderBO.getFrightOrder());
+								prizeOrderBOFromRedis.setFrightTrader(prizeOrderBO.getFrightTrader());
+								prizeOrderBOFromRedis.setStatus(prizeOrderBO.getStatus());
+								//此处不能直接改变list中的数据，因为prizeOrderBOFromRedis是一个临时变量，其地址指向list中的一个元素，对其赋值只是改变了临时变量的指向，改变不了list中的元素的指向
+//								prizeOrderBOFromRedis = prizeOrderBO;
+								
 								break;
 							}
 						}
@@ -270,6 +307,7 @@ public class PrizeServiceImpl implements IPrizeService {
 		try{
 			//检查奖品数量
 			PromotionBO promotionInfo = iPromotionService.queryPromotionById(promotionId);
+			prizeOrderBO.setPromotionId(promotionId);
 			if(promotionInfo.getSkuId()==null){
 				queryPrizeOrderBOResult.setSuccess(false);
 				queryPrizeOrderBOResult.setMsg("奖品已经过期，欢迎下次光临！！！");
@@ -320,6 +358,7 @@ public class PrizeServiceImpl implements IPrizeService {
 					if(lotteryLevel == ladderBO.getType()){
 						prizeOrderBO.setPromotionPrice((ladderBO.getPriceDiscount().multiply(skuInfo.getOutprice()).divide(new BigDecimal("100"))));
 						prizeOrderBO.setFrightPrice(new BigDecimal("8.00"));
+						prizeOrderBO.setPrizeType(lotteryLevel);
 					}
 				}
 			}
@@ -340,7 +379,7 @@ public class PrizeServiceImpl implements IPrizeService {
 		try{
 			String orderListRedisStr = iPromotionRedis.getValue(RedisKeyPrefixConstant.ORDER_LIST_INFO_PRIFIXE+pin);
 			if(StringUtils.isNotBlank(orderListRedisStr)){
-				prizeOrderList  = JsonUtil.readJson(orderListRedisStr, List.class, PromotionBO.class);
+				prizeOrderList  = JsonUtil.readJson(orderListRedisStr, List.class, PrizeOrderBO.class);
 			}
 			if(CollectionUtils.isNotEmpty(prizeOrderList)){
 				for(PrizeOrderBO prizeOrderBO : prizeOrderList){
@@ -406,6 +445,14 @@ public class PrizeServiceImpl implements IPrizeService {
 
 	public void setiOrderIdDAO(IOrderIdDAO iOrderIdDAO) {
 		this.iOrderIdDAO = iOrderIdDAO;
+	}
+
+	public Integer getValidateHour() {
+		return validateHour;
+	}
+
+	public void setValidateHour(Integer validateHour) {
+		this.validateHour = validateHour;
 	}
 
 }

@@ -3,11 +3,12 @@
  * 展示抽奖的div
  */
 function showLotteryPopDiv(){
-	
+	var promotionIdForLottery = $("#promotionIdForLottery").val();
+	var param = "promotionId="+promotionIdForLottery+"&t="+(new Date()).getTime();
 	$.ajax({
 		  url: "/promotion/showLotterHtml.action",
 	      type: "POST",
-	      data: null,
+	      data: param,
 	      dataType: "json",
 	      async:false,
 	      success: function(msg){

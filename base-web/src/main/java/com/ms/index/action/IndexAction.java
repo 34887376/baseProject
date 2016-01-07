@@ -23,6 +23,7 @@ public class IndexAction extends BaseAction{
 	
 	private IPromotionService iPromotionService;
 	
+	
     public String showIndex() {
         try{
         	List<PromotionBriefVOInfo> promotionBriefVOList = new ArrayList<PromotionBriefVOInfo>();

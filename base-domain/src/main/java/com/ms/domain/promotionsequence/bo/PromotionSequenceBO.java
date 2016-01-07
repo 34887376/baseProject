@@ -146,7 +146,7 @@ public class PromotionSequenceBO implements Serializable {
         
 
         //未开始的
-        if(startCalendar.before(nowCalendar)){
+        if(startCalendar.after(nowCalendar)){
         	long distinctTime = startCalendar.getTimeInMillis() - nowCalendar.getTimeInMillis();
         	long waitStart = 10 * 60 * 1000;
         	if( distinctTime > waitStart){
@@ -157,7 +157,7 @@ public class PromotionSequenceBO implements Serializable {
         }
         
         //正在进行的
-        if(startCalendar.after(nowCalendar) && nowCalendar.before(endCalendar)){
+        if(startCalendar.before(nowCalendar) && nowCalendar.before(endCalendar)){
         	return PromotionStatusConstant.START_PROMOTION;
         }
         

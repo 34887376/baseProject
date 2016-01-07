@@ -41,4 +41,9 @@ public interface IBackPromotionService {
 	 * @return
 	 */
 	boolean delPromotion(List<Long> idList);
+	
+	/**
+	 * 刷新促销信息到redis中
+	 */
+	void refreshPromotionInfoToRedis();
 }

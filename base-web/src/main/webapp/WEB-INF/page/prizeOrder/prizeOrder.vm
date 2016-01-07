@@ -35,6 +35,15 @@
 			#if($failMsg)
 				<tr>
 					<td>
+						<div class="errorMsgDiv">
+							$!{failMsg}
+						</div>
+
+					</td>
+				</tr>
+			#else
+				<tr>
+					<td>
 						<div class="addressDiv">
 							<table class="addressTable">
 								<tr><td><label class="addressTitleStyle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;填写收货人信息</label></td></tr>
@@ -65,7 +74,7 @@
 								<tr class="skuTableTitleNameStyle"><td>商品编号</td><td>商品图片</td><td>商品名称</td><td>商品数量</td><td>中奖等级</td><td>商品价格</td></tr>
 								<tr>
 									<td>
-										<label class="skuTextIdStyle">$!{prizeOrderVO.skuId}</label>
+										<label class="skuTextIdStyle">$!{prizeOrderVO.skuId}<input type="hidden" id="skuId" value="$!{prizeOrderVO.skuId}"/></label>
 									</td>
 									<td>
 										<img width="100" height="100" alt="CNCN 百分百羊毛新款男装羊毛衫男士套头V领毛衫NYYY4670 橙色 175" src="//img10.360buyimg.com/n1/jfs/t1897/272/588771888/158370/4498b10/561874e6N4f3d195c.jpg">
@@ -74,7 +83,7 @@
 										<label class="skuTextNameStyle">$!{prizeOrderVO.skuName}</label>
 									</td>
 									<td>
-										<label class="skuTextNumStyle"> &times;$!{prizeOrderVO.skuNum}</label><input type="hidden" id="promotionId" value="$!{prizeOrderVO.promotionId}">
+										<label class="skuTextNumStyle"> &times;$!{prizeOrderVO.skuNum}</label><input type="hidden" id="promotionId" value="$!{prizeOrderVO.promotionId}"/>
 									</td>
 									<td>
 										<label class="skuTextNumStyle">
@@ -103,12 +112,11 @@
 					<td>
 						<div class="priceInfoDiv">
 							<table class="priceInfoTableStyle">
-								<tr><td><tr><label class="priceInfoTitleStyle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;支付信息</label></tr></td></tr>
+								<tr><td><tr><label class="priceInfoTitleStyle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;支付信息<input type="hidden" id="orderPrice" value="$!{prizeOrderVO.promotionPrice}"/></label></tr></td></tr>
 								<tr>
 									<td>
 										<label class="priceTextStyle">订单价格：￥$!{prizeOrderVO.promotionPrice}</label>
 									</td>
-		
 								</tr>
 								<tr>
 									<td>
@@ -120,15 +128,7 @@
 						</div>
 					</td>
 				</tr>
-			#else
-				<tr>
-					<td>
-						<div>
-							$!{failMsg}
-						</div>
-
-					</td>
-				</tr>
+			
 			#end
 		</table>
 	</div>

@@ -1,21 +1,20 @@
 package com.ms.back.action;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import base.test.base.action.BaseAction;
+import base.test.base.util.DateUtils;
+import base.test.base.util.JsonUtil;
+
 import com.ms.action.constant.PageNumConstant;
 import com.ms.domain.action.backstage.BackPromotionSequenceResult;
-import com.ms.domain.ladder.bo.LadderBO;
 import com.ms.domain.promotionsequence.bo.PromotionSequenceBO;
 import com.ms.service.backStage.promotion.face.IBackPromotionSeqSerivce;
-
-import base.test.base.action.BaseAction;
-import base.test.base.util.JsonUtil;
 
 public class PromotionSequenceAction extends BaseAction{
 
@@ -53,12 +52,12 @@ public class PromotionSequenceAction extends BaseAction{
 	/**
 	 * 促销开始时间
 	 */
-	private Date startTime;
+	private String startTime;
 	
 	/**
 	 * 促销结束时间
 	 */
-	private Date endTime;
+	private String endTime;
 	
 	/**
 	 * 是否有效
@@ -85,8 +84,8 @@ public class PromotionSequenceAction extends BaseAction{
 		BackPromotionSequenceResult backPromotionSequenceResult = new BackPromotionSequenceResult();
 		try{
 			PromotionSequenceBO promotionSequenceBO = new PromotionSequenceBO();
-			promotionSequenceBO.setEndTime(endTime);
-			promotionSequenceBO.setStartTime(startTime);
+			promotionSequenceBO.setEndTime(DateUtils.getDate(endTime));
+			promotionSequenceBO.setStartTime(DateUtils.getDate(startTime));
 			promotionSequenceBO.setHasLoad(hasLoad);
 			promotionSequenceBO.setId(promotionSequenceId);
 			promotionSequenceBO.setNextOrder(nextOrder);
@@ -111,8 +110,8 @@ public class PromotionSequenceAction extends BaseAction{
 		BackPromotionSequenceResult backPromotionSequenceResult = new BackPromotionSequenceResult();
 		try{
 			PromotionSequenceBO promotionSequenceBO = new PromotionSequenceBO();
-			promotionSequenceBO.setEndTime(endTime);
-			promotionSequenceBO.setStartTime(startTime);
+			promotionSequenceBO.setEndTime(DateUtils.getDate(endTime));
+			promotionSequenceBO.setStartTime(DateUtils.getDate(startTime));
 			promotionSequenceBO.setHasLoad(hasLoad);
 			promotionSequenceBO.setNextOrder(nextOrder);
 			promotionSequenceBO.setPreviosOrder(previosOrder);
@@ -144,8 +143,8 @@ public class PromotionSequenceAction extends BaseAction{
 		try{
 			PromotionSequenceBO promotionSequenceBO = new PromotionSequenceBO();
 			promotionSequenceBO.setId(promotionSequenceId);
-			promotionSequenceBO.setEndTime(endTime);
-			promotionSequenceBO.setStartTime(startTime);
+			promotionSequenceBO.setEndTime(DateUtils.getDate(endTime));
+			promotionSequenceBO.setStartTime(DateUtils.getDate(startTime));
 			promotionSequenceBO.setHasLoad(hasLoad);
 			promotionSequenceBO.setNextOrder(nextOrder);
 			promotionSequenceBO.setPreviosOrder(previosOrder);
@@ -176,8 +175,8 @@ public class PromotionSequenceAction extends BaseAction{
 		try{
 			PromotionSequenceBO promotionSequenceBO = new PromotionSequenceBO();
 			promotionSequenceBO.setId(promotionSequenceId);
-			promotionSequenceBO.setEndTime(endTime);
-			promotionSequenceBO.setStartTime(startTime);
+			promotionSequenceBO.setEndTime(DateUtils.getDate(endTime));
+			promotionSequenceBO.setStartTime(DateUtils.getDate(startTime));
 			promotionSequenceBO.setHasLoad(hasLoad);
 			promotionSequenceBO.setNextOrder(nextOrder);
 			promotionSequenceBO.setPreviosOrder(previosOrder);
@@ -208,9 +207,10 @@ public class PromotionSequenceAction extends BaseAction{
 	 * @return
 	 */
 	public String refreshDateToRedis(){
+		
 		BackPromotionSequenceResult backPromotionSequenceResult = new BackPromotionSequenceResult();
 		try{
-			boolean refreshResult = iBackPromotionSeqSerivce.refreshBackPromotionInfoToRedis(startPromotionSequenceId);
+			boolean refreshResult = iBackPromotionSeqSerivce.refreshStartPromotionIdToRedis(startPromotionSequenceId);
 			if(refreshResult){
 				backPromotionSequenceResult.setSuccess(true);
 				backPromotionSequenceResult.setMsg("刷新成功！！！");
@@ -291,21 +291,6 @@ public class PromotionSequenceAction extends BaseAction{
 		this.nextOrder = nextOrder;
 	}
 
-	public Date getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-
-	public Date getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
-	}
 
 	public void setiBackPromotionSeqSerivce(
 			IBackPromotionSeqSerivce iBackPromotionSeqSerivce) {
@@ -334,6 +319,22 @@ public class PromotionSequenceAction extends BaseAction{
 
 	public void setStartPromotionSequenceId(Long startPromotionSequenceId) {
 		this.startPromotionSequenceId = startPromotionSequenceId;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 
 }

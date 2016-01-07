@@ -18,4 +18,7 @@ public class OrderStatusDict {
 	
 	//完成的订单
 	public static final int COMPLETE = 100;
+	
+	//无效的订单
+	public static final int INVALID = 400;
 }

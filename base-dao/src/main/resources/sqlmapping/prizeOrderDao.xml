@@ -30,7 +30,7 @@
 	<!-- 添加新促销信息 -->
 	<insert id="addPrizeOrder" parameterClass="prizeOrderDAO">
 		insert into prizeorder (id,orderId,pin,name,address,phone,skuId,promotionId,prizeType,promotionPrice,frightPrice,createTime,invalidTime,frightOrder,frightTrader,status,yn) values
-		(#id#,#orderId#,#pin#,#name#,#address#,#phone#,#skuId#,#promotionId#,#prizeType#,#promotionPrice#,#frightPrice#,#createTime#,#invalidTime#,#frightOrder#,#frightTrader#,#status#,#yn#)
+		(#id#,#orderId#,#pin#,#name#,#address#,#phone#,#skuId#,#promotionId#,#prizeType#,#promotionPrice#,#frightPrice#,now(),#invalidTime#,#frightOrder#,#frightTrader#,#status#,#yn#)
         <selectKey keyProperty="id" resultClass="long">
             select LAST_INSERT_ID()
         </selectKey>
@@ -49,6 +49,12 @@
 				</isNotNull>
 				<isNotNull prepend=","  property="status">
 					status= #status#
+				</isNotNull>
+				<isNotNull prepend=","  property="frightOrder">
+					frightOrder= #frightOrder#
+				</isNotNull>
+				<isNotNull prepend=","  property="frightTrader">
+					frightTrader= #frightTrader#
 				</isNotNull>
 				<isNotNull prepend=","  property="yn">
 					yn= #yn#

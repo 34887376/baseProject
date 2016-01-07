@@ -6,9 +6,13 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import base.test.base.util.JsonUtil;
+
+import com.ms.dao.promotion.redis.IPromotionRedis;
 import com.ms.dao.sku.face.ISkuDAO;
 import com.ms.domain.sku.bo.SkuBO;
 import com.ms.domain.sku.dao.SkuDAO;
+import com.ms.redis.constant.RedisKeyPrefixConstant;
 import com.ms.service.backStage.sku.face.IBackSkuService;
 
 /**
@@ -21,6 +25,9 @@ public class BackSkuServiceImpl implements IBackSkuService {
 	private Logger logger = Logger.getLogger(this.getClass());
 	
 	private ISkuDAO iSkuDAO;
+	
+	//操作redis的方法
+	private IPromotionRedis iPromotionRedis;
 
 	public boolean addSku(SkuBO skuBO) {
 		try {
@@ -139,20 +146,39 @@ public class BackSkuServiceImpl implements IBackSkuService {
 				skuBO.setOutprice(skuDAO.getOutprice());
 				skuBO.setYn(skuDAO.isYn());
 				skuBOList.add(skuBO);
-				
 			}
-
 			return skuBOList;
 			
 		} catch (Exception e) {
 			logger.error("SkuManagerServiceImpl.querySkuListByPageNum查询商品信息时发生异常！！！", e);
 		}
 		return skuBOList;
-		
+	}
+	
+	public void refreshSkuToRedis(){
+		try{
+			//然后查询数据库
+			List<SkuBO> skuBOFromDBList = querySkuListByPageNum(10,10);
+			if(CollectionUtils.isEmpty(skuBOFromDBList)){
+				return;
+			}
+			for(SkuBO skuBOFromDB : skuBOFromDBList){
+				if(skuBOFromDB!=null){
+					String skuStrFromDB = JsonUtil.toJson(skuBOFromDB);
+					iPromotionRedis.setValue(RedisKeyPrefixConstant.SKU_PRIFIXE+String.valueOf(skuBOFromDB.getId()), skuStrFromDB, RedisKeyPrefixConstant.SKU_TIME);
+				}
+			}
+		}catch(Exception e){
+			logger.error("BackSkuServiceImpl.refreshSkuToRedis查询商品数据过程中发生异常！！！", e);
+		}
 	}
 	
 	public void setiSkuDAO(ISkuDAO iSkuDAO) {
 		this.iSkuDAO = iSkuDAO;
+	}
+
+	public void setiPromotionRedis(IPromotionRedis iPromotionRedis) {
+		this.iPromotionRedis = iPromotionRedis;
 	}
 
 }

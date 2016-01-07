@@ -38,7 +38,7 @@ public class LadderPromotionServiceImpl implements ILadderPromotionService {
 			if(CollectionUtils.isNotEmpty(ladderPromotionBOList)){
 				return ladderPromotionBOList;
 			}else{
-				ladderPromotionBOList = queryLadderPromotionFromDBById(promotionId);
+				ladderPromotionBOList = queryLadderPromotionFromDBByPromotionId(promotionId);
 				if(CollectionUtils.isNotEmpty(ladderPromotionBOList)){
 					ladderPromotionRedisStr = JsonUtil.toJson(ladderPromotionBOList);
 					iPromotionRedis.setValue(RedisKeyPrefixConstant.LADDER_PROMOTION_PRIFIXE+String.valueOf(promotionId), ladderPromotionRedisStr, RedisKeyPrefixConstant.LADDER_PROMOTION_TIME);
@@ -51,15 +51,15 @@ public class LadderPromotionServiceImpl implements ILadderPromotionService {
 		return null;
 	}
 
-	public Map<Long, List<LadderPromotionBO>> queryLadderPromotionByPromotionIds(List<Long> ladderPromotionIds) {
+	public Map<Long, List<LadderPromotionBO>> queryLadderPromotionByPromotionIds(List<Long> promotionIds) {
 		try{
 			Map<Long, List<LadderPromotionBO>> ladderPromotionMap = new HashMap<Long, List<LadderPromotionBO>>();
-			if(CollectionUtils.isEmpty(ladderPromotionIds)){
+			if(CollectionUtils.isEmpty(promotionIds)){
 				return ladderPromotionMap;
 			}
-			for(long ladderPromotionId : ladderPromotionIds){
-				List<LadderPromotionBO> ladderPromotionBOList = queryLadderPromotionByPromotionId(ladderPromotionId);
-				ladderPromotionMap.put(ladderPromotionId, ladderPromotionBOList);
+			for(long promotionId : promotionIds){
+				List<LadderPromotionBO> ladderPromotionBOList = queryLadderPromotionByPromotionId(promotionId);
+				ladderPromotionMap.put(promotionId, ladderPromotionBOList);
 			}
 			return ladderPromotionMap;
 		}catch(Exception e){
@@ -70,14 +70,33 @@ public class LadderPromotionServiceImpl implements ILadderPromotionService {
 	}
 
 	/**
-	 * 从数据库中查询单个规则
+	 * 根据促销id查询阶梯促销规则
+	 * @param ladderPromotionId
+	 * @return
+	 */
+	private List<LadderPromotionBO> queryLadderPromotionFromDBByPromotionId(long promotionId){
+		try {
+			LadderPromotionDAO ladderPromotionDAO = new LadderPromotionDAO();
+			ladderPromotionDAO.setPromotionId(promotionId);
+			List<LadderPromotionDAO> ladderPromotionFromDBList = iLadderPromotionDAO.queryLadderPromoitonByCondition(ladderPromotionDAO);
+			List<LadderPromotionBO> ladderPromotionBOList = LadderPromotionConvert.convertDAOTOBOList(ladderPromotionFromDBList);
+			return ladderPromotionBOList;
+		} catch (Exception e) {
+			logger.error("LadderPromotionServiceImpl.queryLadderPromotionFromDBById从数据库中查询规则信息时发生异常！！！", e);
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * 根据阶梯促销规则id从数据库中查询单个规则
 	 * @param skuId
 	 * @return
 	 */
 	private List<LadderPromotionBO> queryLadderPromotionFromDBById(long ladderPromotionId){
 		try {
 			LadderPromotionDAO ladderPromotionDAO = new LadderPromotionDAO();
-			ladderPromotionDAO.setLadderId(ladderPromotionId);
+			ladderPromotionDAO.setId(ladderPromotionId);
 			List<LadderPromotionDAO> ladderPromotionFromDBList = iLadderPromotionDAO.queryLadderPromoitonByCondition(ladderPromotionDAO);
 			List<LadderPromotionBO> ladderPromotionBOList = LadderPromotionConvert.convertDAOTOBOList(ladderPromotionFromDBList);
 			return ladderPromotionBOList;

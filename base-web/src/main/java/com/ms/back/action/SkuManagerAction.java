@@ -129,6 +129,7 @@ public class SkuManagerAction extends BaseAction{
 	
 	public String updateSkus(){
 		try{
+			
 			SkuBO skuBO = new SkuBO();
 			skuBO.setId(skuId);
 			skuBO.setAdverst(skuAdverst);

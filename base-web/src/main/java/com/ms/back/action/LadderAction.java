@@ -25,6 +25,7 @@ public class LadderAction extends BaseAction{
 	private IBackLadderService iBackLadderService;
 	
 	/**
+	 * 
 	 * 阶梯促销规则id
 	 */
 	private Long ladderId;

@@ -28,6 +28,7 @@ public class PromotionAction extends BaseAction{
     
     private IPromotionService iPromotionService;
     
+    
     /**
      * 促销id
      */
@@ -57,6 +58,7 @@ public class PromotionAction extends BaseAction{
         				ladderPromotionInfoVO.setLadderPromotionId(ladderPromotionInfoBO.getPromotionLadderId());
         				ladderPromotionInfoVO.setPromotionPrice(ladderPromotionInfoBO.getPromotionPrice());
         				ladderPromotionInfoVO.setSkuNum(ladderPromotionInfoBO.getSkuNum());
+        				ladderPromotionVOList.add(ladderPromotionInfoVO);
         			}
         			promotionDetailInfoVO.setLadderList(ladderPromotionVOList);
         		}
@@ -80,8 +82,8 @@ public class PromotionAction extends BaseAction{
     		}
     		drawLotteryResult.setPromotionId(promotionId);
     		
-    		String takePrizeUrl = "http://www.ms.com/promotion/takePrize?promotionId="+promotionId+"&t="+System.currentTimeMillis();
-    		int drawResult = iPromotionService.drawLottery("", promotionId, "", "");
+    		String takePrizeUrl = "http://www.ms.com/prize/takePrize.action?promotionId="+promotionId+"&t="+System.currentTimeMillis();
+    		int drawResult = iPromotionService.drawLottery("testforjd2", promotionId, "172.0.0.1", "12i8dsl");
     		switch(drawResult){
 	    		case DrawLotteryResutlDict.UN_START:
 	    			drawLotteryResult.setSuccess(false);
@@ -184,7 +186,7 @@ public class PromotionAction extends BaseAction{
 										"alert(\"蛋都碎了，别砸了！刷新再来.\");"+
 										"return false;"+
 									"}"+
-									"$.getJSON(\"http://www.ms.com/promotion/drawLottery.action?promotionId="+promotionId+"&t="+System.currentTimeMillis()+"\",function(res){	"+
+									"$.getJSON(\"/promotion/drawLottery.action?promotionId="+promotionId+"&t="+System.currentTimeMillis()+"\",function(res){	"+
 										//_this.unbind('click');
 										"$(\".hammer\").css({\"top\":_this.position().top-55,\"left\":_this.position().left+185});"+
 										"$(\".hammer\").animate({"+
@@ -196,7 +198,7 @@ public class PromotionAction extends BaseAction{
 												"$(\".hammer\").hide();"+
 												"$('.resultTip').css({display:'block',top:'100px',left:_this.position().left+45,opacity:0}).animate({top: '50px',opacity:1},300,function(){"+
 													"if(res.success){"+
-														"$(\"#result\").html(res.msg+\" <br/><a href='http://www.ms.com/prize/takePrize.action?promotionId='"+promotionId+"&t="+System.currentTimeMillis()+">去领奖</a>\"+);"+	
+														"$(\"#result\").html(res.msg+\" <br/><a href='\"+res.acceptLotteryLink+\"'>去领奖</a>\");"+	
 													"}else{" +
 														"$(\"#result\").html(res.msg);"+	
 													"}"+

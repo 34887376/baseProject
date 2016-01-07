@@ -34,6 +34,21 @@ public class DateUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
     }
+    
+    /**
+     * 改变时间
+     * @param date
+     * @param filed
+     * @param amount
+     * @return
+     */
+    public static Date addTime(Date date, int filed, int amount){
+    	Calendar oldCalendar = Calendar.getInstance();
+        oldCalendar.setTime(date);
+        oldCalendar.add(filed, amount);
+        Date operatedDate = oldCalendar.getTime();
+        return operatedDate;
+    }
 
     /**
      * 获取date和当前时间的差距，按照月或天或分为单位超过12个月的为很久远

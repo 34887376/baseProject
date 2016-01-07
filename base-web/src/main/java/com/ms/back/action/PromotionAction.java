@@ -21,6 +21,7 @@ public class PromotionAction extends BaseAction{
 	
 	private IBackPromotionService iBackPromotionService;
 	
+	
 	/**
 	 * 促销id
 	 */

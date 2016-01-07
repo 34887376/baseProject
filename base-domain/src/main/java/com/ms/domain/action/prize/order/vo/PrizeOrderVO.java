@@ -48,10 +48,10 @@ public class PrizeOrderVO implements Serializable{
 	private BigDecimal frightPrice;
 	
 	//创建时间
-	private Date createTime;
+	private String createTime;
 	
 	//过期时间
-	private Date invalidTime;
+	private String invalidTime;
 	
 	//订单承运单号
 	private String frightOrder;
@@ -59,8 +59,11 @@ public class PrizeOrderVO implements Serializable{
 	//订单承运商
 	private String frightTrader;
 	
-	//订单状态
-	private Integer status;
+	//订单状态id
+	private Integer statusId;
+	
+	//订单状态文字描述
+	private String statusStr;
 	
 	//订单是否有效
 	private Boolean yn;
@@ -146,21 +149,6 @@ public class PrizeOrderVO implements Serializable{
 		this.frightPrice = frightPrice;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public Date getInvalidTime() {
-		return invalidTime;
-	}
-
-	public void setInvalidTime(Date invalidTime) {
-		this.invalidTime = invalidTime;
-	}
 
 	public String getFrightOrder() {
 		return frightOrder;
@@ -178,13 +166,6 @@ public class PrizeOrderVO implements Serializable{
 		this.frightTrader = frightTrader;
 	}
 
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
 
 	public Boolean getYn() {
 		return yn;
@@ -217,4 +198,38 @@ public class PrizeOrderVO implements Serializable{
 	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
+
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
+	}
+
+	public Integer getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(Integer statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getInvalidTime() {
+		return invalidTime;
+	}
+
+	public void setInvalidTime(String invalidTime) {
+		this.invalidTime = invalidTime;
+	}
+
 }

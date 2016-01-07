@@ -41,4 +41,9 @@ public interface IBackLadderPromotionService {
 	 * @return
 	 */
 	boolean delLadderPromotion(List<Long> idList);
+	
+	/**
+	 * 刷新阶梯规则信息到缓存中
+	 */
+	void refreshLadderPromotionToRedis();
 }

@@ -19,6 +19,7 @@ import com.ms.service.user.face.IUserLonginService;
 
 public class LoginAction extends BaseAction{
 	
+	
 	private static final long serialVersionUID = 1900513687097567642L;
 	
 	private Logger logger = Logger.getLogger(this.getClass());

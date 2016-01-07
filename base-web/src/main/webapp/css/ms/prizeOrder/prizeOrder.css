@@ -30,6 +30,22 @@
 	width:100%;
 }
 
+.errorMsgDiv{
+	display:block;
+	position:relative;left:538px;top:73px;
+	text-align:center;
+	margin:10px 5px;
+	width: 100%;
+	background-color: #ffcccc;
+	line-height: 50px;
+	font-size:30px;
+	font-family:'microsoft yahei';
+	font-style:normal;
+	font-weight: bold;
+	color: balck;
+	margin-bottom: 500px;
+}
+
 .addressDiv{
 	display:block;
 	position:relative;left:338px;top:73px;

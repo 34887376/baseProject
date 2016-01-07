@@ -31,42 +31,53 @@
 		<img width="1210" height="80" src="//img10.360buyimg.com/da/jfs/t1963/54/1101337437/88594/b0525f82/5667c50dNec0f2b0a.jpg">
 	</div>
 	<div id="promotionBodyContent" class="promotionBodyContentDivStyle">
-		<div id="skuInfo" class="skuDetailInfo">
-			<div id="skuImg" class="skuDetailImgInfo">
-				<img width="350" height="350" alt="CNCN 百分百羊毛新款男装羊毛衫男士套头V领毛衫NYYY4670 橙色 175" src="//img10.360buyimg.com/n1/jfs/t1897/272/588771888/158370/4498b10/561874e6N4f3d195c.jpg">
+		#if($promotionDetailInfo)
+			<input type="hidden" id="promotionIdForLottery" value="$!{promotionDetailInfo.promotionId}"/>
+			<div id="skuInfo" class="skuDetailInfo">
+				<div id="skuImg" class="skuDetailImgInfo">
+					<img width="350" height="350" alt="$!{promotionDetailInfo.skuName}" src="//img10.360buyimg.com/n1/jfs/t1897/272/588771888/158370/4498b10/561874e6N4f3d195c.jpg">
+				</div>
+				<div id="skuName" class="skuSkuNameShow"><lable class="skuNameFontStyle">$!{promotionDetailInfo.skuName}</lable></div>
+				<div id="skuAdvert" class="skuAdvertShow">
+					<div id="skuAdvert" class="skuDetailAdvert"><lable class="skuAdvertFontStyle">$!{promotionDetailInfo.advert}</lable></div>
+				</div>
+				<div id="skuPrice" class="skuPriceShow">
+				#set($ladderInfoList = $!{promotionDetailInfo.ladderList})
+					#if($ladderInfoList)
+						#foreach($ladder in $ladderInfoList)
+							<div id="price1" class="skuDetailPrice"><lable class="skuPriceFontStyle">
+							一等奖：限量$!{ladder.skuNum}个        价格￥$!{ladder.promotionPrice}</lable></div>
+						#end
+					#end
+					<div id="price1" class="skuDetailPrice"><lable class="skuPriceFontStyle">一等奖：限量10个        价格￥10.00</lable></div>
+					<div id="price2" class="skuDetailPrice"><lable class="skuPriceFontStyle">二等奖：限量20个        价格￥10.00</lable></div>
+					<div id="price3" class="skuDetailPrice"><lable class="skuPriceFontStyle">三等奖：限量30个        价格￥10.00</lable></div>
+				</div>
+				<div id="killbutton" class="killbuttonShow"><input type="button" class="buttonStyle" onclick="showLotteryPopDiv();" value="抽     奖"></div>
 			</div>
-			<div id="skuName" class="skuSkuNameShow"><lable class="skuNameFontStyle">测试商品1</lable></div>
-			<div id="skuAdvert" class="skuAdvertShow">
-				<div id="skuAdvert" class="skuDetailAdvert"><lable class="skuAdvertFontStyle">广告语</lable></div>
+			<hr style="height:10px;size:5;border:3px;border-top:1px solid #FF0066;"/>
+			<div id="ruleInfo" >
+				<div class="container-fluid">
+					<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+					<div class="row">
+						<table>
+							<tr>
+								<td>
+									   2015年12月9日，京东集团与广州市人民政府正式签署战略合作协议，双方将依据“互联网+”战略，围绕跨境电商、专业市场电商化升级、加快电子商务运营载体和流通基础设施建设等领域开展全方位合作，在促进广州市产业结构转型升级的同时，强化京东“立足广州，辐射华南”的业务发展布局，
+									从而建立起推动华南区域市场快速发展的有力支点。
+									<br/>
+									         广州市委书记任学锋会见了京东集团首席执行官刘强东一行，他表示，广州依托大交通枢纽地位和体系较完备的物流配送体系，加快布局推进国际航运中心和物流中心、贸易中心建设，已经初步形成传统商贸与电子商务相互促进的格局。“十三五”期间，广州将加快实施“互联网+”行动计划，
+									营造基于互联网、移动互联网的创新生态，大力发展电子商务、现代物流、云计算、大数据产业和网络经济、平台经济、分享经济，促进互联网与经济社会深度融合。希望京东集团发挥优势，抓住机遇进一步拓展在穗业务。 
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
 			</div>
-			<div id="skuPrice" class="skuPriceShow">
-				<div id="price1" class="skuDetailPrice"><lable class="skuPriceFontStyle">一等奖：限量10个        价格￥10.00</lable></div>
-				<div id="price2" class="skuDetailPrice"><lable class="skuPriceFontStyle">二等奖：限量20个        价格￥10.00</lable></div>
-				<div id="price3" class="skuDetailPrice"><lable class="skuPriceFontStyle">三等奖：限量30个        价格￥10.00</lable></div>
-			</div>
-			<div id="killbutton" class="killbuttonShow"><input type="button" class="buttonStyle" onclick="showLotteryPopDiv();" value="抽     奖"></div>
-		</div>
-		<hr style="height:10px;size:5;border:3px;border-top:1px solid #FF0066;"/>
-		<div id="ruleInfo" >
-			<div class="container-fluid">
-			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
-			<div class="row">
-				<table>
-					<tr>
-						<td>
-							   2015年12月9日，京东集团与广州市人民政府正式签署战略合作协议，双方将依据“互联网+”战略，围绕跨境电商、专业市场电商化升级、加快电子商务运营载体和流通基础设施建设等领域开展全方位合作，在促进广州市产业结构转型升级的同时，强化京东“立足广州，辐射华南”的业务发展布局，
-							从而建立起推动华南区域市场快速发展的有力支点。
-							<br/>
-							         广州市委书记任学锋会见了京东集团首席执行官刘强东一行，他表示，广州依托大交通枢纽地位和体系较完备的物流配送体系，加快布局推进国际航运中心和物流中心、贸易中心建设，已经初步形成传统商贸与电子商务相互促进的格局。“十三五”期间，广州将加快实施“互联网+”行动计划，
-							营造基于互联网、移动互联网的创新生态，大力发展电子商务、现代物流、云计算、大数据产业和网络经济、平台经济、分享经济，促进互联网与经济社会深度融合。希望京东集团发挥优势，抓住机遇进一步拓展在穗业务。 
-						</td>
-					</tr>
-				</table>
-			</div>
-			</div>
-		</div>
+		#else
+			获取促销信息异常
+		#end
 	</div>
-	
    	<div id="promtionBodyBootom" class="promotionBodyBootomDivStyle">
     	#parse("/htmlPage/common/bottom.html")
     </div>

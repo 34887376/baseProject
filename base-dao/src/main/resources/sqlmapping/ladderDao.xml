@@ -18,7 +18,7 @@
 	</sql>
 	
 	<!-- 根据id批量查询阶梯规则 -->
-	<select id="queryLadderList" resultClass="java.util.List" parameterClass="java.util.List">
+	<select id="queryLadderList" resultClass="ladderDAO" parameterClass="java.util.List">
 		select
 		<include refid="ladderTable.allFileds" />
 		from ladder where id in

@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import base.test.base.util.DateUtils;
+
 import com.ms.domain.action.prize.order.vo.PrizeOrderVO;
+import com.ms.domain.business.constant.OrderStatusEnum;
 import com.ms.domain.prize.order.bo.PrizeOrderBO;
 import com.ms.domain.prize.order.dao.PrizeOrderDAO;
 
@@ -121,11 +124,11 @@ public class PrizeOrderConvert {
 		}
 		prizeOrderVO.setId(prizeOrderBO.getId());
 		prizeOrderVO.setAddress(prizeOrderBO.getAddress());
-		prizeOrderVO.setCreateTime(prizeOrderBO.getCreateTime());
+		prizeOrderVO.setCreateTime(DateUtils.getDateStr(prizeOrderBO.getCreateTime()));
 		prizeOrderVO.setFrightOrder(prizeOrderBO.getFrightOrder());
 		prizeOrderVO.setFrightPrice(prizeOrderBO.getFrightPrice());
 		prizeOrderVO.setFrightTrader(prizeOrderBO.getFrightTrader());
-		prizeOrderVO.setInvalidTime(prizeOrderBO.getInvalidTime());
+		prizeOrderVO.setInvalidTime(DateUtils.getDateStr(prizeOrderBO.getInvalidTime()));
 		prizeOrderVO.setName(prizeOrderBO.getName());
 		prizeOrderVO.setOrderId(prizeOrderBO.getOrderId());
 		prizeOrderVO.setPhone(prizeOrderBO.getPhone());
@@ -134,7 +137,12 @@ public class PrizeOrderConvert {
 		prizeOrderVO.setPromotionId(prizeOrderBO.getPromotionId());
 		prizeOrderVO.setPromotionPrice(prizeOrderBO.getPromotionPrice());
 		prizeOrderVO.setSkuId(prizeOrderBO.getSkuId());
-		prizeOrderVO.setStatus(prizeOrderBO.getStatus());
+		prizeOrderVO.setSkuName(prizeOrderBO.getSkuName());
+		prizeOrderVO.setSkuNum(prizeOrderBO.getSkuNum());
+		prizeOrderVO.setStatusId(prizeOrderBO.getStatus());
+		if(prizeOrderBO.getStatus()!=null){
+			prizeOrderVO.setStatusStr(OrderStatusEnum.getStatusStrById(prizeOrderBO.getStatus()));
+		}
 		prizeOrderVO.setYn(prizeOrderBO.getYn());
 		return prizeOrderVO;
 	}
@@ -151,11 +159,11 @@ public class PrizeOrderConvert {
 		}
 		prizeOrderBO.setId(prizeOrderVO.getId());
 		prizeOrderBO.setAddress(prizeOrderVO.getAddress());
-		prizeOrderBO.setCreateTime(prizeOrderVO.getCreateTime());
+		prizeOrderBO.setCreateTime(DateUtils.getDate(prizeOrderVO.getCreateTime()));
 		prizeOrderBO.setFrightOrder(prizeOrderVO.getFrightOrder());
 		prizeOrderBO.setFrightPrice(prizeOrderVO.getFrightPrice());
 		prizeOrderBO.setFrightTrader(prizeOrderVO.getFrightTrader());
-		prizeOrderBO.setInvalidTime(prizeOrderVO.getInvalidTime());
+		prizeOrderBO.setInvalidTime(DateUtils.getDate(prizeOrderVO.getInvalidTime()));
 		prizeOrderBO.setName(prizeOrderVO.getName());
 		prizeOrderBO.setOrderId(prizeOrderVO.getOrderId());
 		prizeOrderBO.setPhone(prizeOrderVO.getPhone());
@@ -164,7 +172,9 @@ public class PrizeOrderConvert {
 		prizeOrderBO.setPromotionId(prizeOrderVO.getPromotionId());
 		prizeOrderBO.setPromotionPrice(prizeOrderVO.getPromotionPrice());
 		prizeOrderBO.setSkuId(prizeOrderVO.getSkuId());
-		prizeOrderBO.setStatus(prizeOrderVO.getStatus());
+		prizeOrderBO.setSkuName(prizeOrderVO.getSkuName());
+		prizeOrderBO.setSkuNum(prizeOrderVO.getSkuNum());
+		prizeOrderBO.setStatus(prizeOrderVO.getStatusId());
 		prizeOrderBO.setYn(prizeOrderVO.getYn());
 		return prizeOrderBO;
 	}
@@ -176,7 +186,7 @@ public class PrizeOrderConvert {
 	 */
 	public static List<PrizeOrderVO> convertBOTOVOList(List<PrizeOrderBO> prizeOrderBOList){
 		List<PrizeOrderVO> prizeOrderVOList = new ArrayList<PrizeOrderVO>();
-		if(CollectionUtils.isEmpty(prizeOrderVOList)){
+		if(CollectionUtils.isEmpty(prizeOrderBOList)){
 			return prizeOrderVOList;
 		}
 		
@@ -187,11 +197,11 @@ public class PrizeOrderConvert {
 			PrizeOrderVO prizeOrderVO = new PrizeOrderVO();
 			prizeOrderVO.setId(prizeOrderBO.getId());
 			prizeOrderVO.setAddress(prizeOrderBO.getAddress());
-			prizeOrderVO.setCreateTime(prizeOrderBO.getCreateTime());
+			prizeOrderVO.setCreateTime(DateUtils.getDateStr(prizeOrderBO.getCreateTime()));
 			prizeOrderVO.setFrightOrder(prizeOrderBO.getFrightOrder());
 			prizeOrderVO.setFrightPrice(prizeOrderBO.getFrightPrice());
 			prizeOrderVO.setFrightTrader(prizeOrderBO.getFrightTrader());
-			prizeOrderVO.setInvalidTime(prizeOrderBO.getInvalidTime());
+			prizeOrderVO.setInvalidTime(DateUtils.getDateStr(prizeOrderBO.getInvalidTime()));
 			prizeOrderVO.setName(prizeOrderBO.getName());
 			prizeOrderVO.setOrderId(prizeOrderBO.getOrderId());
 			prizeOrderVO.setPhone(prizeOrderBO.getPhone());
@@ -200,13 +210,14 @@ public class PrizeOrderConvert {
 			prizeOrderVO.setPromotionId(prizeOrderBO.getPromotionId());
 			prizeOrderVO.setPromotionPrice(prizeOrderBO.getPromotionPrice());
 			prizeOrderVO.setSkuId(prizeOrderBO.getSkuId());
-			prizeOrderVO.setStatus(prizeOrderBO.getStatus());
+			prizeOrderVO.setSkuName(prizeOrderBO.getSkuName());
+			prizeOrderVO.setSkuNum(prizeOrderBO.getSkuNum());
+			prizeOrderVO.setStatusId(prizeOrderBO.getStatus());
+			prizeOrderVO.setStatusStr(OrderStatusEnum.getStatusStrById(prizeOrderBO.getStatus()));
 			prizeOrderVO.setYn(prizeOrderBO.getYn());
 			prizeOrderVOList.add(prizeOrderVO);
 		}
 		return prizeOrderVOList;
 	}
-	
-	
 	
 }

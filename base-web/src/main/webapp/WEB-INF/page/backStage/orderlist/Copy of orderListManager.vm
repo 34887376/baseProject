@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" /> 
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="#ffffff" name="msapplication-TileColor" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <title>靠谱APP</title>
+    <link href="../../../css/bootstrap-3.3.5/css/bootstrap.css" rel="stylesheet">
+	<link href="../../../css/ms/backStage/orderListManager.css" rel="stylesheet">
+</head> 
+<body>
+<div>
+	<h1>订单管理后台</h1>
+	<hr style="height:10px;size:5;border:3px;border-top:1px solid #FF0066;"/>
+	<div class="container">
+		<div class="col-md-2 col-sm-offset-1"><label>订单号*<lable></div><div class="col-md-2"><input type="text" id="queryOrderId" placeholder="订单号"></div>
+		<div class="col-md-2"><label>用户pin*<lable></div><div class="col-md-2"><input type="text" id="queryUserpin" placeholder="用户pin"></div>
+		<div class="col-md-1"><input type="button" onclick="queryOrderInfo();" id="userName" value="查询"></div>
+	</div>
+	<hr style="height:10px;size:5;border:3px;border-top:3px solid #FF0066;"/>
+    <div class="list pad7" id="orderList">
+	#if($prizeOrderVOList)
+		<table class="table table-bordered table-striped">
+			<thead>
+				<th>id号</th><th>订单号</th><th>用户名</th><th>商品信息</th><th>中奖等级</th><th>订单价格</th><th>收货人信息</th><th>配送信息</th><th>订单状态</th><th>下单时间</th><th>是否有效</th><th>操作编辑</th>
+			</thead>
+			<tbody id="orderInfoBody">
+		#foreach($orderInof in $prizeOrderVOList)
+			<tr>
+				<td>$!{orderInof.id}</td><td>$!{orderInof.orderId}</td><td>$!{orderInof.pin}</td>
+				<td>商品编号:$!{orderInof.skuId}商品名称:$!{orderInof.skuName} 商品数量:$!{orderInof.skuNum}</td>
+				<td>
+					<label class="prizeLevelStyle">
+						#set($level = ${orderInof.prizeType})
+						#if($level==101)
+							 一等奖
+						#elseif($level==102)
+							二等奖
+						#elseif($level==103)
+							三等奖
+						#else
+							未知
+						#end
+							
+					</label>
+				</td>
+				<td>订单价格:$!{prizeOrder.promotionPrice}</br>运费:$!{prizeOrder.frightPrice}</td>
+				<td>收货人:$!{prizeOrder.name}</br>手机号:$!{prizeOrder.phone}</br>收货地址:$!{prizeOrder.address}</td>
+				<td>快递:$!{prizeOrder.frightTrader}</br>单号: $!{prizeOrder.frightOrder}</td>
+				<td>$!{prizeOrder.statusStr}</td>
+				<td>$!{prizeOrder.createTime}</td>
+				#if(${orderInof.yn})
+					<td>有效</td>
+				#else
+					<td>无效</td>
+				#end
+				<td><input type="button" onclick="editOrder('$!{orderInof.orderId}','$!{orderInof.pin}')" value="修改信息"></td>
+			</tr>
+		#end
+			</tbody>
+		</table>
+	#else
+		查询结果为空！！！
+	#end  
+	<!-- 弹出对话框 -->
+	<div id="orderPopdiv" class="orderPopdivhidden">
+		<div class ="orderPopdivhead">
+			<titletip>订单信息</titletip>
+			<closebutton><button type="button" onclick="closeOrderPopDiv();">×</button></closebutton>
+		</div>
+		<div class="container-fluid">
+			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>id号:<lable></div><div class="col-md-2"><input type="text" id="orderUniqueId" placeholder="唯一编号(禁止编辑)"></div>
+				<div class="col-md-1"></div>
+				<div class="col-md-2"><label>订单号:<lable></div><div class="col-md-2"><input type="text" id="orderId" placeholder="订单号(禁止编辑)"></div>
+			</div>
+			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>用户名:<lable></div><div class="col-md-2"><input type="text" id="userPin" placeholder="用户名(禁止编辑)"></div>
+				<div class="col-md-1"></div>
+				<div class="col-md-2"><label>商品编号:<lable></div><div class="col-md-2"><input type="text" id="skuId" placeholder="商品编号(禁止编辑)"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>商品名称:<lable></div><div class="col-md-2"><input type="text" id="skuName" placeholder="商品名称(禁止编辑)"></div>
+				<div class="col-md-1"></div>
+				<div class="col-md-2"><label>中奖等级:<lable></div>
+				<div class="col-md-2">
+					<select id="orderPrizeLevel">
+						  <option value ="101">一等奖</option>
+						  <option value ="102">二等奖</option>
+						  <option value="103">三等奖</option>
+					</select>
+				</div>
+			</div>
+			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>订单价格:<lable></div><div class="col-md-2"><input type="text" id="orderPromotionPrice" placeholder="订单价格(禁止编辑)"></div>
+				<div class="col-md-1"></div>
+				<div class="col-md-2"><label>运费价格:<lable></div><div class="col-md-2"><input type="text" id="orderFrightPrice" placeholder="运费价格(禁止编辑)"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>收货人:<lable></div><div class="col-md-2"><input type="text" id="name" placeholder="收货人(禁止编辑)"></div>
+				<div class="col-md-1"></div>
+				<div class="col-md-2"><label>手机号:<lable></div><div class="col-md-2"><input type="text" id="phone" placeholder="手机号"></div>
+			</div>
+			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+			<div class="row">
+				<div class="col-md-5 col-md-offset-1"><label>收货地址:<lable></div><div class="col-md-2"><input type="text" id="address" placeholder="收货地址(禁止编辑)"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>快递商家:<lable></div><div class="col-md-2"><input type="text" id="frightTrade" placeholder="快递商家"></div>
+				<div class="col-md-1"></div>
+				<div class="col-md-2"><label>快递单号:<lable></div><div class="col-md-2"><input type="text" id="frightOrder" placeholder="快递单号"></div>
+			</div>
+			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>订单状态:<lable></div>
+				<div class="col-md-2">
+					<select id="status">
+					  <option value ="11">新订单</option>
+					  <option value ="12">支付完成</option>
+					  <option value="13">配送中</option>
+					  <option value="100">完成</option>
+					</select>
+				</div>
+				<div class="col-md-1"></div>
+				<div class="col-md-2"><label>下单时间:<lable></div><div class="col-md-2"><input type="text" id="orderCreatTime" placeholder="下单时间(禁止编辑)"></div>
+			</div>
+			
+			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-1"><label>是否有效:<lable></div>
+				<div class="col-md-2">
+					<input type="radio" name="isvaliade" value="1" checked="checked" />有效 
+					<input type="radio" name="isvaliade" value="0" />无效
+				</div>
+			</div>
+			<div class="row"><div class="col-md-1">&nbsp;&nbsp;&nbsp;</div></div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-2"><input type="button" id="submitLadder" onclick="submitOrder();" value="提   交" size="15"></div>
+				<div class="col-md-3"></div>
+				<div class="col-md-2"><input type="button" id="cancleLadder" onclick="cancleOrder();" value="取   消"></div>
+			</div>
+		</div>
+	</div>
+    
+</div>
+</div>
+<div style="margin-top:400px;">
+</div>
+  	<script src="../../../js/jquery-1.11.3/jquery-1.11.3.min.js?r=20150707"></script>
+	<script src="../../../js/bootstrap-3.3.5/bootstrap.js?r=20150707"></script>
+	<script src="../../../js/common/utils.js?r=20150707"></script>
+	<script src="../../../js/ms/backStage/orderlist/orderListManager.js?r=2015120711"></script>
+</body>
+</html>

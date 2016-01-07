@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
+<script type="text/javascript">
+function eggClick(obj) 
+{var _this = obj;
+if(_this.hasClass("curr")){
+	alert("蛋都碎了，别砸了！刷新再来.");return false;
+	}
+	$.getJSON("/promotion/drawLottery.action?promotionId=null&t=1451880303921",function(res){	
+		$(".hammer").css({"top":_this.position().top-55,"left":_this.position().left+185});
+		$(".hammer").animate({"top":_this.position().top-25,"left":_this.position().left+125},30,function()
+				{
+					_this.addClass("curr");_this.find("sup").show();
+					$(".hammer").hide();
+					$('.resultTip').css({display:'block',top:'100px',left:_this.position().left+45,opacity:0}).animate({top: '50px',opacity:1},300,function()
+							{if(res.success){
+								$("#result").html(res.msg+" <br/><a href='/prize/takePrize.action?promotionId='null&t=1451880303921>去领奖</a>")}
+							else{
+								$("#result").html(res.msg);
+								}
+							});
+					});
+		});
+	}
+	$(".eggList li").click(function() {
+		$(this).children("span").hide();eggClick($(this));
+		});
+	$(".eggList li").hover(function() {var posL = $(this).position().left + $(this).width();$("#hammer").show().css('left', posL);})
+	</script>
 <title>后台管理系统</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="description" content="" />

@@ -63,7 +63,7 @@ public class BackPromotionSeqSerivceImpl implements IBackPromotionSeqSerivce {
 	private static final String startPromotionIndexKey=RedisKeyPrefixConstant.START_PROMOTION_SEQUENCE_INDEX;
 	private static final String promotionKey=RedisKeyPrefixConstant.PROMOTION_INFO_INDEX;
 	
-	public boolean refreshBackPromotionInfoToRedis(long startPromotionId) {
+	public boolean refreshStartPromotionIdToRedis(long startPromotionId) {
 
 		try {
 			iPromotionRedis.setValue(startPromotionIndexKey, String.valueOf(startPromotionId));
@@ -311,6 +311,24 @@ public class BackPromotionSeqSerivceImpl implements IBackPromotionSeqSerivce {
 			logger.error("BackPromotionSeqSerivceImpl.delPromotionSequence更新促销信息时发生异常，入参{promotionSequenceBO="+JsonUtil.toJson(promotionSequenceBO)+"}", e);
 		}
 		return false;
+	}
+	
+
+	public void refreshPromotionSequenceToRedis() {
+		PromotionSequenceBO promotionSequenceBO = new PromotionSequenceBO();
+		try{
+			promotionSequenceBO.setYn(1);
+			List<PromotionSequenceBO> promotionSeqBOList = queryPromotionSequenceByCondition(promotionSequenceBO);
+			if(CollectionUtils.isEmpty(promotionSeqBOList)){
+				return;
+			}
+			for(PromotionSequenceBO promotionSeqBOFromDB : promotionSeqBOList){
+				String promotionSeqStr = JsonUtil.toJson(promotionSeqBOFromDB);
+				iPromotionRedis.setValue(RedisKeyPrefixConstant.PROMOTION_SEQUENCE_PROMOTIONID_PRIFIXE+String.valueOf(promotionSeqBOFromDB.getPromotionId()), promotionSeqStr, RedisKeyPrefixConstant.PROMOTION_SEQUENCE_PROMOTIONID_TIME);
+			}
+		}catch(Exception e){
+			logger.error("BackPromotionSeqSerivceImpl.refreshPromotionSequenceToRedis刷新促销信息到redis时发生异常！！！", e);
+		}
 	}
 	
 

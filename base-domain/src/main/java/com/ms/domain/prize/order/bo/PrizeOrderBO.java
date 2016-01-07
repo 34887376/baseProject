@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.ms.domain.business.constant.OrderStatusDict;
+
 public class PrizeOrderBO implements Serializable{
 
 	private static final long serialVersionUID = 3188180757720941853L;
@@ -178,7 +180,11 @@ public class PrizeOrderBO implements Serializable{
 		}
 
 		public Integer getStatus() {
-			return status;
+			if(invalidTime.before(new Date())){
+				return OrderStatusDict.INVALID;
+			}else{
+				return status;
+			}
 		}
 
 		public void setStatus(Integer status) {
