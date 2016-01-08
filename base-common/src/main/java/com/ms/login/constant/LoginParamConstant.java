@@ -14,7 +14,7 @@ public class LoginParamConstant {
 	private static String cookieName;
 
 	//md5加密的key
-	private static String md5Seed;
+	private static String md5Seed = "nihaoIYWOY1839!@#$#@	dindi?><dslieIEYWEFS235215132";
 	
 	//首页链接地址
 	private static String indexPageUrl;
@@ -24,6 +24,9 @@ public class LoginParamConstant {
 	
 	//登录页面链接
 	private static String loginUrl;
+	
+	//记录uuid的cookie
+	private static String uuidCookieName;
 	
 	public static String getCookieName() {
 		return cookieName;
@@ -36,10 +39,10 @@ public class LoginParamConstant {
 	public static String getMd5Seed() {
 		return md5Seed;
 	}
-
-	public void setMd5Seed(String md5Seed) {
-		this.md5Seed = md5Seed;
-	}
+	
+//	public void setMd5Seed(String md5Seed) {
+//		this.md5Seed = md5Seed;
+//	}
 
 	public static String getIndexPageUrl() {
 		return indexPageUrl;
@@ -71,5 +74,13 @@ public class LoginParamConstant {
 
 	public void setDomainUrl(String domainUrl) {
 		this.domainUrl = domainUrl;
+	}
+
+	public static String getUuidCookieName() {
+		return uuidCookieName;
+	}
+
+	public static void setUuidCookieName(String uuidCookieName) {
+		LoginParamConstant.uuidCookieName = uuidCookieName;
 	}
 }

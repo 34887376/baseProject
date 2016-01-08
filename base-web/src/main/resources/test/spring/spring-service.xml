@@ -33,6 +33,8 @@
 	<!--促销序列信息-->
 	<bean id="iPromotionSequenceService" class="com.ms.service.promotionsequence.face.impl.PromotionSequenceServiceImpl"/>
 	<!--促销序列管理-->
-	<bean id="iPrizeService" class="com.ms.service.prize.face.impl.PrizeServiceImpl"/>
+	<bean id="iPrizeService" class="com.ms.service.prize.face.impl.PrizeServiceImpl">
+		<property name="validateHour" value="${orderValidateHour}"></property>
+	</bean>
 	<!-- 前台管理end  end  end  -->
 </beans>

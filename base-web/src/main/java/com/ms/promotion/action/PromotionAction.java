@@ -83,7 +83,7 @@ public class PromotionAction extends BaseAction{
     		drawLotteryResult.setPromotionId(promotionId);
     		
     		String takePrizeUrl = "http://www.ms.com/prize/takePrize.action?promotionId="+promotionId+"&t="+System.currentTimeMillis();
-    		int drawResult = iPromotionService.drawLottery("testforjd2", promotionId, "172.0.0.1", "12i8dsl");
+    		int drawResult = iPromotionService.drawLottery(getPin(), promotionId, getIpAddr(), getUUID());
     		switch(drawResult){
 	    		case DrawLotteryResutlDict.UN_START:
 	    			drawLotteryResult.setSuccess(false);

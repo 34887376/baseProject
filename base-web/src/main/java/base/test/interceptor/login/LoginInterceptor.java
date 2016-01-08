@@ -41,7 +41,7 @@ public class LoginInterceptor implements Interceptor {
             // 取得请求相关的ActionContext实例
             HttpServletResponse response = ServletActionContext.getResponse();
             HttpServletRequest request = ServletActionContext.getRequest();
-            String redirectLoginUrl = LoginParamConstant.getLoginUrl() + "?hello=you";
+            String redirectLoginUrl = LoginParamConstant.getLoginUrl() + "?hello=you&r="+System.currentTimeMillis();
             //从cookie中获取登录的用户名
             String pin = cookieUtils.getCookieValue(request, LoginParamConstant.getCookieName());
              if (pin == null) {

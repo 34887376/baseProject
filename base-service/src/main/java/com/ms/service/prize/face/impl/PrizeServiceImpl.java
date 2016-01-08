@@ -168,13 +168,24 @@ public class PrizeServiceImpl implements IPrizeService {
 			prizeOrderDAO.setInvalidTime(DateUtils.addTime(new Date(), Calendar.HOUR, validateHour));
 			prizeOrderDAO.setYn(true);
 			long id = iPrizeOrderDAO.addPrizeOrder(prizeOrderDAO);
+			
 			if(id < 0){
 				throw new RuntimeException("提交遇到雾霾看不清道路，请稍后再重试！！！");
 			}
+			
+			//需要放到这里，否则会有空指针的异常
+			prizeOrderBO.setId(id);
+			prizeOrderBO.setOrderId(orderId);
+			prizeOrderBO.setStatus(OrderStatusDict.NEW);
+			prizeOrderBO.setCreateTime(new Date());
+			prizeOrderBO.setInvalidTime(DateUtils.addTime(new Date(), Calendar.HOUR, validateHour));
+			prizeOrderBO.setYn(true);
+			
 			String submitOrderRecordRedisKey = RedisKeyPrefixConstant.ORDER_SUBMIT_RECORD_PRIFIXE+prizeOrderBO.getPin()+prizeOrderBO.getPromotionId();
 			iPromotionRedis.setValue(submitOrderRecordRedisKey, "1", RedisKeyPrefixConstant.ORDER_SUBMIT_RECORD_TIME);
 			/**
-			 * 提交成功后将订单信息写入缓存
+			 * 提交成功后将订单信息写入缓存;查询出来的订单列表可能是从缓存中查出来的旧的或者数据库查出来的新的
+			 * 就会出现新订单不存在列表和存在列表中的情况
 			 */
 			List<PrizeOrderBO> orderListFromRedis = queryPrizeOrderListByPin(prizeOrderBO.getPin());
 			boolean hasRecordInRedis = false;
@@ -187,11 +198,6 @@ public class PrizeServiceImpl implements IPrizeService {
 				}
 			}
 			if(!hasRecordInRedis){
-				prizeOrderBO.setOrderId(orderId);
-				prizeOrderBO.setStatus(OrderStatusDict.NEW);
-				prizeOrderBO.setYn(true);
-				prizeOrderBO.setId(id);
-				prizeOrderBO.setCreateTime(new Date());
 				orderListFromRedis.add(prizeOrderBO);
 			}
 			return orderId;

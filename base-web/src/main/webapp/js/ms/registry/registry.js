@@ -66,10 +66,10 @@ function registry(){
 	    	  }else{
 	    		  $("#tipInfo").text(msg.msg);
 	    	  }
-	    	  alert("sss"+msg);
+	    	  alert(msg.msg);
 	      },
 	      error:function(msg){
-	    	  alert(msg);
+	    	  alert(msg.msg);
 	      }
 		 });
 }

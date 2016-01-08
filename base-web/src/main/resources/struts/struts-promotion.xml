@@ -4,7 +4,7 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"  
     "http://struts.apache.org/dtds/struts-2.0.dtd">  
 <struts>
-	<package name="forntpromotionpage" namespace="/promotion" extends="struts-base">
+	<package name="forntpromotionpage" namespace="/promotion" extends="struts-login">
 		<action name="*" method="{1}" class="com.ms.promotion.action.PromotionAction">
 			<result name="showPromotionDetail" type="velocity">/WEB-INF/page/promotion/promotion.vm</result>
 			<result name="showLotterHtml" type="json">

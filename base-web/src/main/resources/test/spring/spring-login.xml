@@ -9,13 +9,38 @@
      <bean class="com.ms.login.constant.LoginParamConstant">
         <property name="domainUrl" value="${ms.targetDomainUrl}"/>
        	<property name="cookieName" value="${login.pinCookieName}"/>
-        <property name="md5Seed" value="${login.pinCookieKey}"/>
         <property name="indexPageUrl" value="${ms.indexpage}"></property>
         <property name="pinContextKey" value="${pin.context.name}"></property>
         <property name="loginUrl" value="${login.loginUrl}"></property>
+        <property name="uuidCookieName" value="${pin.uuid.cookieName}"></property>
     </bean>
    
    
+   	<bean id="encryptCookie" class="com.ms.cookie.util.MsCookie" abstract="true">
+		<property name="encrypt" value="true" />
+		<property name="key" value="${login.pinCookieKey}" />
+	</bean>
+
+	<bean id="loginCookie" abstract="true" parent="encryptCookie" >
+		<property name="path" value="/" />
+		<property name="domain" value=".ms.com" />
+	</bean>
+	
+   <!-- cookie ¼¯ºÏ -->
+	<bean id="msCookie" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean parent="loginCookie">
+					<property name="name" value="${login.pinCookieName}" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+    <bean id="cookieUtils" class="com.ms.cookie.util.CookieUtils">
+       <!--  <property name="pinCookieName" value="${m.login.pinCookieKey}"/> -->
+    </bean>
+    
     <bean id="loginInterceptorProcess" class="base.test.interceptor.login.LoginInterceptor">
        <!--  <property name="pinCookieName" value="${m.login.pinCookieKey}"/> -->
     </bean>

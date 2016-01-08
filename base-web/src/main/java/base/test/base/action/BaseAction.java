@@ -75,8 +75,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
     public String getPin() {
         String Pin = (String) request.getAttribute(LoginParamConstant.getPinContextKey());
         System.out.println(Pin);
-//        return Pin;
-        return "testforjd2";
+        return Pin;
+//        return "testforjd2";
     }
 
     /**
@@ -116,6 +116,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
         }
     }
 
+    /**
+     * 获取用户ip地址
+     * @return
+     */
     public String getIpAddr() {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -128,6 +132,12 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+    
+    public String getUUID(){
+    	String uuid=getCookieValue(LoginParamConstant.getUuidCookieName());
+    	return uuid;
+    	
     }
     
     /**

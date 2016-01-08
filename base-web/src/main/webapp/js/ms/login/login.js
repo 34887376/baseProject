@@ -45,11 +45,15 @@ function login(){
 	    	  }else{
 	    		  $("#tipInfo").text(msg.msg);
 	    	  }
-	    	  alert("sss"+msg);
+	    	  alert(msg.msg);
 	      },
 	      error:function(msg){
-	    	  alert(msg);
+	    	  alert(msg.msg);
 	      }
 		 });
 	
+}
+
+function goToRegistry(){
+	window.location.href = "/htmlPage/registry/registry.html?r="+(new Date()).getTime();
 }

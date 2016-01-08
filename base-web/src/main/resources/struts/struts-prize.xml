@@ -4,7 +4,7 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"  
     "http://struts.apache.org/dtds/struts-2.0.dtd">  
 <struts>
-	<package name="prize" namespace="/prize" extends="struts-base">
+	<package name="prize" namespace="/prize" extends="struts-login">
 		<action name="*" method="{1}" class="com.ms.prize.order.action.PrizeAction">
 			<result name="takePrize" type="velocity">/WEB-INF/page/prizeOrder/prizeOrder.vm</result>
 			<result name="submitPrizeOrder" type="json">

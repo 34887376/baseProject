@@ -78,17 +78,17 @@ public class LoginAction extends BaseAction{
 	 */
 	public String login(){
 		try {
-			LoginResult loginResult =  new LoginResult();
+			LoginResult loginResult = new LoginResult();
 			if(StringUtils.isBlank(userName) || StringUtils.isBlank(pwd)){
 				loginResult.setMsg("用户名或者密码为空！！！");
 				loginResult.setSuccess(false);
 				print(JsonUtil.toJson(loginResult));
 				return "loginReturn";
 			}
-//			String pin = userLonginService.validateUserPassRePin(userName,pwd);
-//			if(StringUtils.isNotBlank(pin)){
-//				setCookie(LoginParamConstant.getCookieName(),pin);
-//			}
+			String pin = userLonginService.validateUserPassRePin(userName,pwd);
+			if(StringUtils.isNotBlank(pin)){
+				setCookie(LoginParamConstant.getCookieName(),pin);
+			}
 			if(StringUtils.isBlank(aimUrl)){
 				aimUrl=LoginParamConstant.getIndexPageUrl();
 			}

@@ -180,7 +180,7 @@ public class PrizeOrderBO implements Serializable{
 		}
 
 		public Integer getStatus() {
-			if(invalidTime.before(new Date())){
+			if(invalidTime!=null && invalidTime.before(new Date())){
 				return OrderStatusDict.INVALID;
 			}else{
 				return status;

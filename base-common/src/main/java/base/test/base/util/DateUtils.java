@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,6 +21,9 @@ public class DateUtils {
     static Logger logger = Logger.getLogger("DateUtils");
 
     public static Date getDate(String dateString) {
+    	if(StringUtils.isBlank(dateString)){
+    		return null;
+    	}
         Date date = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -31,6 +35,9 @@ public class DateUtils {
     }
 
     public static String getDateStr(Date date) {
+    	if(date==null){
+    		return null;
+    	}
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
     }
@@ -43,6 +50,9 @@ public class DateUtils {
      * @return
      */
     public static Date addTime(Date date, int filed, int amount){
+    	if(date==null){
+    		return null;
+    	}
     	Calendar oldCalendar = Calendar.getInstance();
         oldCalendar.setTime(date);
         oldCalendar.add(filed, amount);
