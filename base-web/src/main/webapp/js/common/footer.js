@@ -19,3 +19,36 @@ function changeItem(obj){
 	var u=window.location.pathname;
 	alert(u);
 }
+
+//正则
+function trimTxt(txt) {
+    return txt.replace(/(^\s*)|(\s*$)/g, "");
+}
+function is_forbid(temp_str) {
+    temp_str = trimTxt(temp_str);
+    temp_str = temp_str.replace('*', "@");
+    temp_str = temp_str.replace('--', "@");
+    temp_str = temp_str.replace('/', "@");
+    temp_str = temp_str.replace('+', "@");
+    temp_str = temp_str.replace('\'', "@");
+    temp_str = temp_str.replace('\\', "@");
+    temp_str = temp_str.replace('$', "@");
+    temp_str = temp_str.replace('^', "@");
+    temp_str = temp_str.replace('.', "@");
+    temp_str = temp_str.replace(';', "@");
+    temp_str = temp_str.replace('<', "@");
+    temp_str = temp_str.replace('>', "@");
+    temp_str = temp_str.replace('"', "@");
+    temp_str = temp_str.replace('=', "@");
+    temp_str = temp_str.replace('{', "@");
+    temp_str = temp_str.replace('}', "@");
+    var forbid_str = new String('@,%,~,&');
+    var forbid_array = new Array();
+    forbid_array = forbid_str.split(',');
+    var arlen = forbid_array.length;
+    for (var i = 0; i < arlen;  i++) {
+        if (temp_str.search(new RegExp(forbid_array[i])) != -1)
+            return false;
+    }
+    return true;
+}
